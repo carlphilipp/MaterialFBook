@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SwipeRefreshLayout swipeView;
     private NavigationView mNavigationView;
     private FloatingActionMenu mMenuFAB;
-    public MFBWebView mWebView;
+    private MFBWebView mWebView;
     private SharedPreferences mPreferences;
     private DownloadManager mDownloadManager;
     private DrawerLayout drawer;

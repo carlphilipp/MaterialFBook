@@ -236,7 +236,7 @@ public class NotificationsJIS extends JobIntentService {
                 .setContentText(content)
                 .setWhen(System.currentTimeMillis())
                 .setLargeIcon(picprofile)
-                .setSmallIcon(R.drawable.ic_material)
+                .setSmallIcon(R.mipmap.ic_launcher_responsive)
                 .setAutoCancel(true);
 
         if (mPreferences.getBoolean(vibrate_, false)) {

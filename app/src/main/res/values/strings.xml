@@ -154,7 +154,7 @@
     <!-- End navigation -->
 
     <!-- App -->
-    <string name="app_name" translatable="false">MaterialFBook</string>
+    <string name="app_name" translatable="false">Facebook</string>
     <string name="silent">No sound</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
