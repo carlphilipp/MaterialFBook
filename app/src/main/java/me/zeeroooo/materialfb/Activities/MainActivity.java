@@ -33,11 +33,12 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -49,6 +50,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -59,23 +61,8 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-import com.github.clans.fab.FloatingActionMenu;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import android.support.v4.view.GravityCompat;
-import android.webkit.URLUtil;
 import android.widget.TextView;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-
+import com.github.clans.fab.FloatingActionMenu;
 import me.zeeroooo.materialfb.Misc.BookmarksAdapter;
 import me.zeeroooo.materialfb.Misc.BookmarksH;
 import me.zeeroooo.materialfb.Misc.DatabaseHelper;
@@ -88,6 +75,15 @@ import me.zeeroooo.materialfb.WebView.Helpers;
 import me.zeeroooo.materialfb.WebView.JavaScriptHelpers;
 import me.zeeroooo.materialfb.WebView.JavaScriptInterfaces;
 import me.zeeroooo.materialfb.WebView.MFBWebView;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ValueCallback<Uri[]> mFilePathCallback;
@@ -134,6 +130,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         searchToolbar();
+
+        // Setup navigation and status bar color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setNavigationBarColor(getApplicationContext().getResources().getColor(R.color.MFBPrimaryDark));
+            getWindow().setStatusBarColor(getApplicationContext().getResources().getColor(R.color.MFBPrimary));
+        }
 
         // Setup the DrawLayout
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -1078,13 +1080,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mWebView.loadUrl("https://m.facebook.com");
             }
         }
-        
+
         String newUrl = urlIntent;
         String more_new_url;
-        if(newUrl != null && newUrl.contains("www.facebook.com")) {
+        if (newUrl != null && newUrl.contains("www.facebook.com")) {
             more_new_url = newUrl.replace("www.facebook.com", "m.facebook.com");
             mWebView.loadUrl(more_new_url);
-        } else if(newUrl != null &&  newUrl.contains("web.facebook.com")) {
+        } else if (newUrl != null && newUrl.contains("web.facebook.com")) {
             more_new_url = newUrl.replace("web.facebook.com", "m.facebook.com");
             mWebView.loadUrl(more_new_url);
         } else {
