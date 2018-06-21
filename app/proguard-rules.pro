@@ -25,4 +25,11 @@
 
 -keep class android.support.v7.widget.SearchView { *; }
 
--keepnames class com.mypackage.MyGlideModule
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+}
+
+-keep,includedescriptorclasses class com.github.clans.fab.FloatingActionMenu { *; }
+-keep,includedescriptorclasses class me.zeeroooo.materialfb.WebView.MFBWebView { *; }

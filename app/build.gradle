@@ -6,7 +6,7 @@ android {
     flavorDimensions "versionCode"
 
     lintOptions {
-        checkReleaseBuilds false
+        checkReleaseBuilds true
         abortOnError false
     }
 
@@ -28,6 +28,8 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
