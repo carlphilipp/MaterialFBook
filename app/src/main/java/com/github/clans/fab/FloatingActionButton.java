@@ -471,12 +471,9 @@ public class FloatingActionButton extends AppCompatImageButton {
         mClickListener = l;
         View label = (View) getTag(R.id.fab_label);
         if (label != null) {
-            label.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mClickListener != null) {
-                        mClickListener.onClick(FloatingActionButton.this);
-                    }
+            label.setOnClickListener(v -> {
+                if (mClickListener != null) {
+                    mClickListener.onClick(FloatingActionButton.this);
                 }
             });
         }

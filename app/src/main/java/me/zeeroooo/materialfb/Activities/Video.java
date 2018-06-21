@@ -66,70 +66,54 @@ public class Video extends AppCompatActivity {
         mVideoView.setVideoURI(Uri.parse(url));
 
         mVideoView.requestFocus();
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mVideoView.seekTo(position);
-                mSeekbar.setMax(mVideoView.getDuration());
-                mSeekbar.postDelayed(Update, 1000);
-                mElapsedTime.postDelayed(Update, 1000);
-                mRemainingTime.postDelayed(Update, 1000);
-                setVisibility(View.GONE, android.R.anim.fade_out);
-                if (position == 0)
-                    mVideoView.start();
-            }
+        mVideoView.setOnPreparedListener(mediaPlayer -> {
+            mVideoView.seekTo(position);
+            mSeekbar.setMax(mVideoView.getDuration());
+            mSeekbar.postDelayed(Update, 1000);
+            mElapsedTime.postDelayed(Update, 1000);
+            mRemainingTime.postDelayed(Update, 1000);
+            setVisibility(View.GONE, android.R.anim.fade_out);
+            if (position == 0)
+                mVideoView.start();
         });
 
         // Buttons
         final ImageButton pause = findViewById(R.id.pauseplay_btn);
         setBackground(pause);
-        pause.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (mVideoView.isPlaying()) {
-                    mVideoView.pause();
-                    ((ImageButton) v).setImageResource(android.R.drawable.ic_media_play);
-                } else {
-                    mVideoView.start();
-                    ((ImageButton) v).setImageResource(android.R.drawable.ic_media_pause);
-                }
+        pause.setOnClickListener(v -> {
+            if (mVideoView.isPlaying()) {
+                mVideoView.pause();
+                ((ImageButton) v).setImageResource(android.R.drawable.ic_media_play);
+            } else {
+                mVideoView.start();
+                ((ImageButton) v).setImageResource(android.R.drawable.ic_media_pause);
             }
         });
 
         final ImageButton previous = findViewById(R.id.previous_btn);
         setBackground(previous);
-        previous.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mVideoView.seekTo(0);
-                mSeekbar.setProgress(0);
-            }
+        previous.setOnClickListener(v -> {
+            mVideoView.seekTo(0);
+            mSeekbar.setProgress(0);
         });
 
         final ImageButton download = findViewById(R.id.download_btn);
         setBackground(download);
-        download.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                RequestStoragePermission();
-            }
-        });
+        download.setOnClickListener(v -> RequestStoragePermission());
 
-        mVideoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                setCountDown();
-                setVisibility(View.VISIBLE, android.R.anim.fade_in);
-                return false;
-            }
+        mVideoView.setOnTouchListener((v, event) -> {
+            setCountDown();
+            setVisibility(View.VISIBLE, android.R.anim.fade_in);
+            return false;
         });
 
         final ImageButton share = findViewById(R.id.share_btn);
         setBackground(share);
-        share.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, url);
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.context_share_link)));
-            }
+        share.setOnClickListener(v -> {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.context_share_link)));
         });
 
         mSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

@@ -59,22 +59,18 @@ public class BookmarksAdapter extends ArrayAdapter<BookmarksH> {
 
         viewHolder.title.setText(bookmark.getTitle());
 
-        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                DBHelper.remove(bookmark.getTitle(), bookmark.getUrl(), null);
-                bookmarks.remove(position);
-                notifyDataSetChanged();
-                CookingAToast.cooking(getContext(), getContext().getString(R.string.remove_bookmark) + " " + bookmark.getTitle(), Color.WHITE, Color.parseColor("#fcd90f"), R.drawable.ic_delete, false).show();
-            }
+        viewHolder.delete.setOnClickListener(v -> {
+            DBHelper.remove(bookmark.getTitle(), bookmark.getUrl(), null);
+            bookmarks.remove(position);
+            notifyDataSetChanged();
+            CookingAToast.cooking(getContext(), getContext().getString(R.string.remove_bookmark) + " " + bookmark.getTitle(), Color.WHITE, Color.parseColor("#fcd90f"), R.drawable.ic_delete, false).show();
         });
 
-        viewHolder.share.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, bookmark.getUrl());
-                getContext().startActivity(Intent.createChooser(shareIntent, getContext().getString(R.string.context_share_link)));
-            }
+        viewHolder.share.setOnClickListener(v -> {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, bookmark.getUrl());
+            getContext().startActivity(Intent.createChooser(shareIntent, getContext().getString(R.string.context_share_link)));
         });
         // Return the completed view to render on screen
         return convertView;

@@ -176,46 +176,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         swipeView = findViewById(R.id.swipeLayout);
         swipeView.setColorSchemeResources(android.R.color.white);
         swipeView.setProgressBackgroundColorSchemeColor(Theme.getColor(this));
-        swipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mWebView.reload();
-            }
-        });
+        swipeView.setOnRefreshListener(() -> mWebView.reload());
 
         // Inflate the FAB menu
         mMenuFAB = findViewById(R.id.menuFAB);
 
-        View.OnClickListener mFABClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.textFAB:
-                        mWebView.loadUrl("javascript:(function(){try{document.querySelector('button[name=\"view_overview\"]').click()}catch(_){window.location.href=\"" + baseURL + "?pageload=composer\"}})()");
-                        swipeView.setEnabled(false);
-                        break;
-                    case R.id.photoFAB:
-                        mWebView.loadUrl("javascript:(function(){try{document.querySelector('button[name=\"view_photo\"]').click()}catch(_){window.location.href=\"" + baseURL + "?pageload=composer_photo\"}})()");
-                        swipeView.setEnabled(false);
-                        break;
-                    case R.id.checkinFAB:
-                        mWebView.loadUrl("javascript:(function(){try{document.querySelector('button[name=\"view_location\"]').click()}catch(_){window.location.href=\"" + baseURL + "?pageload=composer_checkin\"}})()");
-                        swipeView.setEnabled(false);
-                        break;
-                    case R.id.topFAB:
-                        mWebView.scrollTo(0, 0);
-                        break;
-                    case R.id.shareFAB:
-                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                        shareIntent.setType("text/plain");
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
-                        startActivity(Intent.createChooser(shareIntent, getString(R.string.context_share_link)));
-                        break;
-                    default:
-                        break;
-                }
-                mMenuFAB.close(true);
+        View.OnClickListener mFABClickListener = v -> {
+            switch (v.getId()) {
+                case R.id.textFAB:
+                    mWebView.loadUrl("javascript:(function(){try{document.querySelector('button[name=\"view_overview\"]').click()}catch(_){window.location.href=\"" + baseURL + "?pageload=composer\"}})()");
+                    swipeView.setEnabled(false);
+                    break;
+                case R.id.photoFAB:
+                    mWebView.loadUrl("javascript:(function(){try{document.querySelector('button[name=\"view_photo\"]').click()}catch(_){window.location.href=\"" + baseURL + "?pageload=composer_photo\"}})()");
+                    swipeView.setEnabled(false);
+                    break;
+                case R.id.checkinFAB:
+                    mWebView.loadUrl("javascript:(function(){try{document.querySelector('button[name=\"view_location\"]').click()}catch(_){window.location.href=\"" + baseURL + "?pageload=composer_checkin\"}})()");
+                    swipeView.setEnabled(false);
+                    break;
+                case R.id.topFAB:
+                    mWebView.scrollTo(0, 0);
+                    break;
+                case R.id.shareFAB:
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.context_share_link)));
+                    break;
+                default:
+                    break;
             }
+            mMenuFAB.close(true);
         };
 
         findViewById(R.id.textFAB).setOnClickListener(mFABClickListener);
@@ -224,18 +216,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         findViewById(R.id.topFAB).setOnClickListener(mFABClickListener);
         findViewById(R.id.shareFAB).setOnClickListener(mFABClickListener);
 
-        mWebView.setOnScrollChangedCallback(new MFBWebView.OnScrollChangedCallback() {
-            @Override
-            public void onScrollChange(WebView view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                // Make sure the hiding is enabled and the scroll was significant
-                if (Math.abs(oldScrollY - scrollY) > getApplication().getResources().getDimensionPixelOffset(R.dimen.fab_scroll_threshold)) {
-                    if (scrollY > oldScrollY) {
-                        // User scrolled down, hide the button
-                        mMenuFAB.hideMenuButton(true);
-                    } else if (scrollY < oldScrollY) {
-                        // User scrolled up, show the button
-                        mMenuFAB.showMenuButton(true);
-                    }
+        mWebView.setOnScrollChangedCallback((view, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            // Make sure the hiding is enabled and the scroll was significant
+            if (Math.abs(oldScrollY - scrollY) > getApplication().getResources().getDimensionPixelOffset(R.dimen.fab_scroll_threshold)) {
+                if (scrollY > oldScrollY) {
+                    // User scrolled down, hide the button
+                    mMenuFAB.hideMenuButton(true);
+                } else if (scrollY < oldScrollY) {
+                    // User scrolled up, show the button
+                    mMenuFAB.showMenuButton(true);
                 }
             }
         });
@@ -619,12 +608,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Add OnClick listener to Profile picture
         ImageView profileImage = mNavigationView.getHeaderView(0).findViewById(R.id.profile_picture);
         profileImage.setClickable(true);
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawer.closeDrawers();
-                mWebView.loadUrl(baseURL + "me");
-            }
+        profileImage.setOnClickListener(v -> {
+            drawer.closeDrawers();
+            mWebView.loadUrl(baseURL + "me");
         });
 
         mDownloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
@@ -695,12 +681,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (Helpers.getCookie() != null && !mPreferences.getBoolean("save_data", false)) {
             badgeUpdate = new Handler();
-            badgeTask = new Runnable() {
-                @Override
-                public void run() {
-                    JavaScriptHelpers.updateNumsService(mWebView);
-                    badgeUpdate.postDelayed(badgeTask, 15000);
-                }
+            badgeTask = () -> {
+                JavaScriptHelpers.updateNumsService(mWebView);
+                badgeUpdate.postDelayed(badgeTask, 15000);
             };
             badgeTask.run();
             new UserInfo(MainActivity.this).execute();
@@ -821,8 +804,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             final String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
+            for (String aChildren : children) {
+                boolean success = deleteDir(new File(dir, aChildren));
                 if (!success)
                     return false;
             }
@@ -843,36 +826,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView notif = action_notif.findViewById(R.id.badge_icon);
         setBackground(notif);
         notif.setImageDrawable(getResources().getDrawable(R.drawable.ic_notifications));
-        notif.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mWebView.setVisibility(View.INVISIBLE);
-                showAnimation = true;
-                circleRevealView = v;
+        notif.setOnClickListener(v -> {
+            mWebView.setVisibility(View.INVISIBLE);
+            showAnimation = true;
+            circleRevealView = v;
 
-                mWebView.stopLoading();
-                mWebView.loadUrl(baseURL + "notifications.php");
-                setTitle(R.string.nav_notifications);
-                Helpers.uncheckRadioMenu(mNavigationView.getMenu());
-                NotificationsJIS.ClearbyId(MainActivity.this, 1);
-            }
+            mWebView.stopLoading();
+            mWebView.loadUrl(baseURL + "notifications.php");
+            setTitle(R.string.nav_notifications);
+            Helpers.uncheckRadioMenu(mNavigationView.getMenu());
+            NotificationsJIS.ClearbyId(MainActivity.this, 1);
         });
         ImageView msg = action_msg.findViewById(R.id.badge_icon);
         setBackground(msg);
         msg.setImageDrawable(getResources().getDrawable(R.drawable.ic_message));
-        msg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mWebView.setVisibility(View.INVISIBLE);
-                showAnimation = true;
-                circleRevealView = v;
+        msg.setOnClickListener(v -> {
+            mWebView.setVisibility(View.INVISIBLE);
+            showAnimation = true;
+            circleRevealView = v;
 
-                mWebView.stopLoading();
-                mWebView.loadUrl(baseURL + "messages/");
-                setTitle(R.string.menu_messages);
-                NotificationsJIS.ClearbyId(MainActivity.this, 969);
-                Helpers.uncheckRadioMenu(mNavigationView.getMenu());
-            }
+            mWebView.stopLoading();
+            mWebView.loadUrl(baseURL + "messages/");
+            setTitle(R.string.menu_messages);
+            NotificationsJIS.ClearbyId(MainActivity.this, 969);
+            Helpers.uncheckRadioMenu(mNavigationView.getMenu());
         });
         return true;
     }

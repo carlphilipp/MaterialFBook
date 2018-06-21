@@ -58,18 +58,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
 
             findPreference("BlackList").setOnPreferenceClickListener(this);
 
-            preferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-                public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                    switch (key) {
-                        case "notif_interval":
-                            reschedule(prefs);
-                            break;
-                        case "notif_exact":
-                            reschedule(prefs);
-                            break;
-                        default:
-                            break;
-                    }
+            preferences.registerOnSharedPreferenceChangeListener((prefs, key) -> {
+                switch (key) {
+                    case "notif_interval":
+                        reschedule(prefs);
+                        break;
+                    case "notif_exact":
+                        reschedule(prefs);
+                        break;
+                    default:
+                        break;
                 }
             });
         }
@@ -104,15 +102,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                 ListView BlackListView = view.findViewById(R.id.BlackListView);
                 BlackListView.setAdapter(adapter);
 
-                BlacklistDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String word = blword.getText().toString();
-                        if (!word.equals("")) {
-                            blh = new BlackListH(word);
-                            DBHelper.addData(null, null, blh.getWord());
-                            blacklist.add(blh);
-                            adapter.notifyDataSetChanged();
-                        }
+                BlacklistDialog.setPositiveButton(android.R.string.ok, (dialog, id) -> {
+                    String word = blword.getText().toString();
+                    if (!word.equals("")) {
+                        blh = new BlackListH(word);
+                        DBHelper.addData(null, null, blh.getWord());
+                        blacklist.add(blh);
+                        adapter.notifyDataSetChanged();
                     }
                 });
 

@@ -46,13 +46,11 @@ public class BlacklistAdapter extends ArrayAdapter<BlackListH> {
 
         viewHolder.title.setText(h.getWord());
 
-        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                DBHelper.remove(null,null, h.getWord());
-                BlackLH.remove(position);
-                notifyDataSetChanged();
-                CookingAToast.cooking(getContext(), getContext().getString(R.string.remove_bookmark) + " " + h.getWord(), Color.WHITE, Color.parseColor("#fcd90f"), R.drawable.ic_delete, false).show();
-            }
+        viewHolder.delete.setOnClickListener(v -> {
+            DBHelper.remove(null,null, h.getWord());
+            BlackLH.remove(position);
+            notifyDataSetChanged();
+            CookingAToast.cooking(getContext(), getContext().getString(R.string.remove_bookmark) + " " + h.getWord(), Color.WHITE, Color.parseColor("#fcd90f"), R.drawable.ic_delete, false).show();
         });
         return convertView;
     }

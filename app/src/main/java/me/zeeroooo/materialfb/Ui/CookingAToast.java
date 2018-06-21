@@ -21,10 +21,10 @@ public class CookingAToast {
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.cooking_a_toast, null);
         view.setBackgroundColor(background);
 
-        AppCompatImageView icon = (AppCompatImageView) view.findViewById(R.id.icon);
+        AppCompatImageView icon = view.findViewById(R.id.icon);
         icon.setImageResource(icon_toast);
 
-        AppCompatTextView message = (AppCompatTextView) view.findViewById(R.id.message);
+        AppCompatTextView message = view.findViewById(R.id.message);
         message.setText(message_to_show);
         message.setTextColor(text_color);
 

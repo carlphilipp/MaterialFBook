@@ -211,22 +211,16 @@ public class FloatingActionMenu extends ViewGroup {
 
         mShowBackgroundAnimator = ValueAnimator.ofInt(0, maxAlpha);
         mShowBackgroundAnimator.setDuration(ANIMATION_DURATION);
-        mShowBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Integer alpha = (Integer) animation.getAnimatedValue();
-                setBackgroundColor(Color.argb(alpha, red, green, blue));
-            }
+        mShowBackgroundAnimator.addUpdateListener(animation -> {
+            Integer alpha = (Integer) animation.getAnimatedValue();
+            setBackgroundColor(Color.argb(alpha, red, green, blue));
         });
 
         mHideBackgroundAnimator = ValueAnimator.ofInt(maxAlpha, 0);
         mHideBackgroundAnimator.setDuration(ANIMATION_DURATION);
-        mHideBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Integer alpha = (Integer) animation.getAnimatedValue();
-                setBackgroundColor(Color.argb(alpha, red, green, blue));
-            }
+        mHideBackgroundAnimator.addUpdateListener(animation -> {
+            Integer alpha = (Integer) animation.getAnimatedValue();
+            setBackgroundColor(Color.argb(alpha, red, green, blue));
         });
     }
 
@@ -458,12 +452,7 @@ public class FloatingActionMenu extends ViewGroup {
             addLabel(fab);
 
             if (fab == mMenuButton) {
-                mMenuButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggle(mIsAnimated);
-                    }
-                });
+                mMenuButton.setOnClickListener(v -> toggle(mIsAnimated));
             }
         }
     }
@@ -635,33 +624,27 @@ public class FloatingActionMenu extends ViewGroup {
                     counter++;
 
                     final FloatingActionButton fab = (FloatingActionButton) child;
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isOpened()) return;
+                    mUiHandler.postDelayed(() -> {
+                        if (isOpened()) return;
 
-                            if (fab != mMenuButton) {
-                                fab.show(animate);
-                            }
+                        if (fab != mMenuButton) {
+                            fab.show(animate);
+                        }
 
-                            Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (label != null && label.isHandleVisibilityChanges()) {
-                                label.show(animate);
-                            }
+                        Label label = (Label) fab.getTag(R.id.fab_label);
+                        if (label != null && label.isHandleVisibilityChanges()) {
+                            label.show(animate);
                         }
                     }, delay);
                     delay += mAnimationDelayPerItem;
                 }
             }
 
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mMenuOpened = true;
+            mUiHandler.postDelayed(() -> {
+                mMenuOpened = true;
 
-                    if (mToggleListener != null) {
-                        mToggleListener.onMenuToggle(true);
-                    }
+                if (mToggleListener != null) {
+                    mToggleListener.onMenuToggle(true);
                 }
             }, ++counter * mAnimationDelayPerItem);
         }
@@ -808,12 +791,7 @@ public class FloatingActionMenu extends ViewGroup {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
                 close(animate);
-                mUiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        hideMenuButtonWithImage(animate);
-                    }
-                }, mAnimationDelayPerItem * mButtonsCount);
+                mUiHandler.postDelayed(() -> hideMenuButtonWithImage(animate), mAnimationDelayPerItem * mButtonsCount);
             } else {
                 hideMenuButtonWithImage(animate);
             }

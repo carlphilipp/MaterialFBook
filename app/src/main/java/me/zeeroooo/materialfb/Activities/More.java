@@ -44,10 +44,8 @@ public class More extends AppCompatActivity {
                     changelog.setTitle(getResources().getString(R.string.changelog));
                     changelog.setMessage(Html.fromHtml(getResources().getString(R.string.changelog_list)));
                     changelog.setCancelable(false);
-                    changelog.setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface changelog, int id) {
-                            // Nothing here :p
-                        }
+                    changelog.setPositiveButton("Ok!", (changelog1, id) -> {
+                        // Nothing here :p
                     });
                     changelog.show();
                     return true;
