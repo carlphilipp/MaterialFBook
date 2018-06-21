@@ -16,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -57,15 +56,9 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import com.github.clans.fab.FloatingActionMenu;
-import me.zeeroooo.materialfb.Misc.BookmarksAdapter;
-import me.zeeroooo.materialfb.Misc.BookmarksH;
-import me.zeeroooo.materialfb.Misc.DatabaseHelper;
 import me.zeeroooo.materialfb.Misc.UserInfo;
 import me.zeeroooo.materialfb.Notifications.NotificationsJIS;
 import me.zeeroooo.materialfb.R;
@@ -83,13 +76,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int FILE_CHOOSER_RESULT_CODE = 2888;
+    private static final int INPUT_FILE_REQUEST_CODE = 1;
+
     private ValueCallback<Uri[]> mFilePathCallback;
     private Uri mCapturedImageURI = null, sharedFromGallery;
     private ValueCallback<Uri> mUploadMessage;
-    private int FILECHOOSER_RESULTCODE = 2888, INPUT_FILE_REQUEST_CODE = 1;
     private String baseURL, mCameraPhotoPath, Url, css, urlIntent = null;
     private SwipeRefreshLayout swipeView;
     private NavigationView mNavigationView;
@@ -97,11 +92,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public MFBWebView mWebView;
     private SharedPreferences mPreferences;
     private DownloadManager mDownloadManager;
-    private DatabaseHelper DBHelper;
-    private BookmarksAdapter BLAdapter;
-    private ListView BookmarksListView;
-    private ArrayList<BookmarksH> bookmarks;
-    private BookmarksH bk;
     private DrawerLayout drawer;
     private Elements elements;
     private Toolbar searchToolbar;
@@ -111,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Runnable badgeTask;
     private TextView mr_badge, fr_badge, notif_badge, msg_badge;
     private boolean showAnimation;
-    private Cursor cursor;
     private View circleRevealView;
 
     @Override
@@ -157,41 +146,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 break;
         }
-
-        DBHelper = new DatabaseHelper(this);
-        bookmarks = new ArrayList<>();
-
-        cursor = DBHelper.getReadableDatabase().rawQuery("SELECT TITLE, URL FROM mfb_table", null);
-        while (cursor != null && cursor.moveToNext()) {
-            if (cursor.getString(0) != null && cursor.getString(1) != null) {
-                bk = new BookmarksH(cursor.getString(0), cursor.getString(1));
-                bookmarks.add(bk);
-            }
-        }
-
-        BLAdapter = new BookmarksAdapter(this, bookmarks, DBHelper);
-        BookmarksListView = findViewById(R.id.bookmarksListView);
-        BookmarksListView.setAdapter(BLAdapter);
-
-        BookmarksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView adapter, View view, int position, long arg) {
-                BookmarksH item = (BookmarksH) BookmarksListView.getAdapter().getItem(position);
-                mWebView.loadUrl(item.getUrl());
-                drawer.closeDrawers();
-            }
-        });
-
-        ImageButton newbookmark = findViewById(R.id.add_bookmark);
-        newbookmark.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                bk = new BookmarksH(mWebView.getTitle(), mWebView.getUrl());
-                DBHelper.addData(bk.getTitle(), bk.getUrl(), null);
-                bookmarks.add(bk);
-                BLAdapter.notifyDataSetChanged();
-                CookingAToast.cooking(MainActivity.this, getString(R.string.new_bookmark) + " " + mWebView.getTitle(), Color.WHITE, Color.parseColor("#214594"), R.drawable.ic_bookmarks, false).show();
-            }
-        });
 
         mr_badge = (TextView) mNavigationView.getMenu().findItem(R.id.nav_most_recent).getActionView();
         fr_badge = (TextView) mNavigationView.getMenu().findItem(R.id.nav_friendreq).getActionView();
@@ -635,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (sharedFromGallery == null) {
                     Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
                     chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Parcelable[]{captureIntent});
-                    startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
+                    startActivityForResult(chooserIntent, FILE_CHOOSER_RESULT_CODE);
                 }
             }
 
@@ -763,10 +717,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
-        if (!cursor.isClosed()) {
-            DBHelper.close();
-            cursor.close();
-        }
         super.onDestroy();
         mWebView.clearCache(true);
         mWebView.clearHistory();
@@ -804,7 +754,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mFilePathCallback.onReceiveValue(results);
             mFilePathCallback = null;
         } else {
-            if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (requestCode == FILE_CHOOSER_RESULT_CODE) {
                 if (null == this.mUploadMessage)
                     return;
 
