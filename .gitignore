@@ -46,3 +46,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 app/src/main/java/me/zeeroooo/materialfb/Activities/Photo.java
+local.properties
+.gradle
+.idea
+*.iml
+build
