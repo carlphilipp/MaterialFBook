@@ -19,6 +19,11 @@
             android:title="@string/location_enabled_title" />
         <SwitchPreference
             android:defaultValue="true"
+            android:key="hide_top_story"
+            android:summary="@string/hide_editor_newsfeed_summary"
+            android:title="@string/hide_top_story_panel_summary" />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="hide_editor_newsfeed"
             android:summary="@string/hide_editor_newsfeed_summary"
             android:title="@string/hide_editor_newsfeed_title" />

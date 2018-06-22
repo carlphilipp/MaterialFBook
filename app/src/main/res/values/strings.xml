@@ -37,6 +37,8 @@
     <string name="general_setting_title">GENERAL</string>
     <string name="location_enabled_title">Location access</string>
     <string name="location_enabled_summary">Allow Facebook to obtain your location.</string>
+    <string name="hide_top_story_panel_title">Hide Top Story Panel in News Feed</string>
+    <string name="hide_top_story_panel_summary">Hide top story panel in news feed.</string>
     <string name="hide_editor_newsfeed_title">Hide Status editor in News Feed</string>
     <string name="hide_editor_newsfeed_summary">Hide status editor from feed.</string>
     <string name="stop_images_title">Don\'t load images</string>

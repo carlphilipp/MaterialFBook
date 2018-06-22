@@ -55,7 +55,18 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.github.clans.fab.FloatingActionMenu;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import me.zeeroooo.materialfb.Misc.UserInfo;
 import me.zeeroooo.materialfb.Notifications.NotificationsJIS;
 import me.zeeroooo.materialfb.R;
@@ -65,14 +76,6 @@ import me.zeeroooo.materialfb.WebView.Helpers;
 import me.zeeroooo.materialfb.WebView.JavaScriptHelpers;
 import me.zeeroooo.materialfb.WebView.JavaScriptInterfaces;
 import me.zeeroooo.materialfb.WebView.MFBWebView;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -443,14 +446,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     view.loadUrl("javascript:(function(){try{document.querySelector('button#u_0_1.btn.btnD.mfss.touchable').click()}catch(_){}})()");
                 }
 
-                // TODO: Create a preference for that
-                css += "._59e9._55wr._4g33._400s{display:none}";
-
                 if (preferences.getBoolean("hide_menu_bar", true))
                     css += "#page{top:-45px}";
                 // Hide the status editor on the News Feed if setting is enabled
                 if (preferences.getBoolean("hide_editor_newsfeed", true))
                     css += "#mbasic_inline_feed_composer{display:none}";
+
+                // Hide the top story panel in news feed right before the status box
+                if (preferences.getBoolean("hide_top_story", true))
+                    css += "._59e9._55wr._4g33._400s{display:none}";
 
                 // Hide 'Sponsored' content (ads)
                 if (preferences.getBoolean("hide_sponsored", true))
