@@ -14,10 +14,9 @@ public final class Theme {
 
     // Thanks to Naman Dwivedi
     public static int getColor(final Context context) {
-        int Attr;
-        Attr = R.attr.colorPrimary;
+        int colorPrimary = R.attr.colorPrimary;
         final TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(Attr, outValue, true);
+        context.getTheme().resolveAttribute(colorPrimary, outValue, true);
         return outValue.data;
     }
 
