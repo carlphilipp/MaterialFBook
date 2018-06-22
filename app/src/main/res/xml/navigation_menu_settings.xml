@@ -8,18 +8,13 @@
             android:title="@string/menu_groups" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="nav_search"
-            android:summary="@string/menu_search_summary"
-            android:title="@string/menu_search" />
-        <SwitchPreference
-            android:defaultValue="false"
             android:key="nav_mainmenu"
             android:summary="@string/menu_mainmenu_summary"
             android:title="@string/menu_mainmenu" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="nav_most_recent"
-            android:summary="@string/menu_groups_summary"
+            android:summary="@string/menu_most_recent_summary"
             android:title="@string/menu_most_recent" />
         <SwitchPreference
             android:defaultValue="false"

@@ -32,16 +32,12 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -96,12 +92,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FloatingActionMenu mMenuFAB;
     private DownloadManager mDownloadManager;
     private Elements elements;
-    private Toolbar searchToolbar;
-    private MenuItem searchItem;
-    private SearchView searchView;
     private Handler badgeUpdate;
     private Runnable badgeTask;
-    private TextView mostRecentTv, friendsRegTv, notif_badge, msg_badge;
+    private TextView mostRecentTv, friendsRegTv;
     private boolean showAnimation;
     private View circleRevealView;
 
@@ -117,21 +110,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         drawer = findViewById(R.id.drawer_layout);
 
-        // Setup the toolbar
-        Toolbar mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        searchToolbar();
-
         // Setup navigation and status bar color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(getApplicationContext().getResources().getColor(R.color.MFBPrimaryDark));
             getWindow().setStatusBarColor(getApplicationContext().getResources().getColor(R.color.MFBPrimary));
         }
-
-        // Setup the DrawLayout
-        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
         setupBaseUrl();
 
@@ -155,8 +138,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Hide buttons if they are disabled
         if (!preferences.getBoolean("nav_groups", false))
             navigationView.getMenu().findItem(R.id.nav_groups).setVisible(false);
-        if (!preferences.getBoolean("nav_search", false))
-            navigationView.getMenu().findItem(R.id.nav_search).setVisible(false);
         if (!preferences.getBoolean("nav_mainmenu", false))
             navigationView.getMenu().findItem(R.id.nav_mainmenu).setVisible(false);
         if (!preferences.getBoolean("nav_most_recent", false))
@@ -461,6 +442,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     view.loadUrl("javascript:(function(){try{document.querySelector('button#u_0_1.btn.btnD.mfss.touchable').disabled = false}catch(_){}})()");
                     view.loadUrl("javascript:(function(){try{document.querySelector('button#u_0_1.btn.btnD.mfss.touchable').click()}catch(_){}})()");
                 }
+
+                // TODO: Create a preference for that
+                css += "._59e9._55wr._4g33._400s{display:none}";
 
                 if (preferences.getBoolean("hide_menu_bar", true))
                     css += "#page{top:-45px}";
@@ -784,8 +768,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawers();
-        if (searchToolbar.hasExpandedActionView())
-            searchItem.collapseActionView();
         else if (webView.canGoBack()) {
             webView.goBack();
         } else {
@@ -821,9 +803,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         View action_notif = menu.findItem(R.id.action_notifications).getActionView();
         View action_msg = menu.findItem(R.id.action_messages).getActionView();
-
-        notif_badge = action_notif.findViewById(R.id.badge_count);
-        msg_badge = action_msg.findViewById(R.id.badge_count);
 
         ImageView notif = action_notif.findViewById(R.id.badge_icon);
         setBackground(notif);
@@ -887,17 +866,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setTitle(R.string.menu_friendreq);
                 item.setChecked(true);
                 break;
-            case R.id.nav_search:
-                AppBarLayout appBarLayout = findViewById(R.id.appbarlayout);
-                appBarLayout.setExpanded(true);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    circleReveal(R.id.searchtoolbar, true);
-                else
-                    searchToolbar.setVisibility(View.VISIBLE);
-
-                searchItem.expandActionView();
-                break;
             case R.id.nav_groups:
                 webView.setVisibility(View.INVISIBLE);
 
@@ -953,15 +921,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(Video);
     }
 
-
-    public void setNotificationNum(int num) {
-        txtFormat(notif_badge, num, Color.WHITE, false);
-    }
-
-    public void setMessagesNum(int num) {
-        txtFormat(msg_badge, num, Color.WHITE, false);
-    }
-
     public void setRequestsNum(int num) {
         txtFormat(friendsRegTv, num, Color.RED, true);
     }
@@ -971,7 +930,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void txtFormat(@Nullable TextView t, int i, int color, boolean bold) {
-        if(t != null) {
+        if (t != null) {
             t.setText(String.format("%s", i));
             t.setTextColor(color);
             t.setGravity(Gravity.CENTER_VERTICAL);
@@ -1023,54 +982,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             webView.loadUrl(urlIntent);
         }
-    }
-
-    // Thanks to Jaison Fernando for the great tutorial.
-    // http://droidmentor.com/searchview-animation-like-whatsapp/
-    private void searchToolbar() {
-        searchToolbar = findViewById(R.id.searchtoolbar);
-        searchToolbar.inflateMenu(R.menu.menu_search);
-        Menu search_menu = searchToolbar.getMenu();
-
-        searchItem = search_menu.findItem(R.id.action_filter_search);
-
-        searchView = (SearchView) search_menu.findItem(R.id.action_filter_search).getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                webView.loadUrl(baseURL + "search/top/?q=" + query);
-                searchItem.collapseActionView();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    circleReveal(R.id.searchtoolbar, false);
-                else
-                    searchToolbar.setVisibility(View.INVISIBLE);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(final String newText) {
-                return false;
-            }
-
-        });
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    circleReveal(R.id.searchtoolbar, false);
-                } else
-                    searchToolbar.setVisibility(View.INVISIBLE);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-        });
     }
 
     @SuppressWarnings("NewApi")

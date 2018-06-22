@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity">
 
-    <include layout="@layout/toolbar" />
-
     <include layout="@layout/content_main" />
 
     <com.github.clans.fab.FloatingActionMenu

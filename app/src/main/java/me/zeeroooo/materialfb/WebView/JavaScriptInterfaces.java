@@ -23,8 +23,6 @@ public class JavaScriptInterfaces {
         final int requests_int = Helpers.isInteger(requests) ? Integer.parseInt(requests) : 0;
         final int mr_int = Helpers.isInteger(feed) ? Integer.parseInt(feed) : 0;
         mContext.runOnUiThread(() -> {
-            mContext.setNotificationNum(notifications_int);
-            mContext.setMessagesNum(messages_int);
             mContext.setRequestsNum(requests_int);
             mContext.setMrNum(mr_int);
         });
