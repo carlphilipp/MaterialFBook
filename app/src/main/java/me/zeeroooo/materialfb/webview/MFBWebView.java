@@ -1,11 +1,15 @@
 package me.zeeroooo.materialfb.webview;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 public class MFBWebView extends WebView implements NestedScrollingChild {
@@ -37,13 +41,27 @@ public class MFBWebView extends WebView implements NestedScrollingChild {
         setNestedScrollingEnabled(true);
     }
 
+    public void updateSettings(final SharedPreferences preferences) {
+        getSettings().setGeolocationEnabled(preferences.getBoolean("location_enabled", false));
+        getSettings().setMinimumFontSize(Integer.parseInt(preferences.getString("textScale", "1")));
+        getSettings().setBlockNetworkImage(preferences.getBoolean("stop_images", false));
+        getSettings().setAppCacheEnabled(true);
+        getSettings().setUseWideViewPort(true);
+        getSettings().setJavaScriptEnabled(true);
+        getSettings().setAllowFileAccess(true);
+        getSettings().setAllowContentAccess(true);
+        getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux ARM) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+    }
+
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         if (mOnScrollChangedCallback != null) {
             mOnScrollChangedCallback.onScrollChange(this, l, t, oldl, oldt);
         }
-
     }
 
     public void setOnScrollChangedCallback(final OnScrollChangedCallback mOnScrollChangedCallback) {
@@ -80,8 +98,7 @@ public class MFBWebView extends WebView implements NestedScrollingChild {
     }
 
     @Override
-    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed,
-                                        int[] offsetInWindow) {
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
         return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
     }
 
