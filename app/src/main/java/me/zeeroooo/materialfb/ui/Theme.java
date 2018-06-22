@@ -2,7 +2,7 @@
  * Created by ZeeRooo
  * https://github.com/ZeeRooo
  */
-package me.zeeroooo.materialfb.Ui;
+package me.zeeroooo.materialfb.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;

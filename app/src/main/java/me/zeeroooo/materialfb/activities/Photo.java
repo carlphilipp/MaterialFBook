@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Activities;
+package me.zeeroooo.materialfb.activities;
 
 import android.Manifest;
 import android.app.DownloadManager;
@@ -50,7 +50,7 @@ import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 
-import me.zeeroooo.materialfb.Ui.CookingAToast;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 import me.zeeroooo.materialfb.R;
 
 public class Photo extends AppCompatActivity implements View.OnTouchListener {

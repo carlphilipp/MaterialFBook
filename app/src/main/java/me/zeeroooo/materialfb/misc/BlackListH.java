@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Misc;
+package me.zeeroooo.materialfb.misc;
 
 public class BlackListH {
     private final String word;

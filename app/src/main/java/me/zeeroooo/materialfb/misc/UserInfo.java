@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Misc;
+package me.zeeroooo.materialfb.misc;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,9 +8,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import me.zeeroooo.materialfb.Activities.MainActivity;
+import me.zeeroooo.materialfb.activities.MainActivity;
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.WebView.Helpers;
+import me.zeeroooo.materialfb.webview.Helpers;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 

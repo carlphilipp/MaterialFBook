@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Misc;
+package me.zeeroooo.materialfb.misc;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.Ui.CookingAToast;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 
 public class BookmarksAdapter extends ArrayAdapter<BookmarksH> {
     private ArrayList<BookmarksH> bookmarks;

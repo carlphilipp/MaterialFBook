@@ -1,7 +1,7 @@
 /**
  * Code taken from FaceSlim by indywidualny. Thanks.
  **/
-package me.zeeroooo.materialfb.Fragments;
+package me.zeeroooo.materialfb.fragments;
 
 import android.Manifest;
 import android.content.Intent;
@@ -17,10 +17,9 @@ import android.support.v4.app.ActivityCompat;
 
 import java.util.Locale;
 
-import me.zeeroooo.materialfb.Activities.More;
-import me.zeeroooo.materialfb.BuildConfig;
-import me.zeeroooo.materialfb.Notifications.Scheduler;
-import me.zeeroooo.materialfb.Ui.CookingAToast;
+import me.zeeroooo.materialfb.activities.More;
+import me.zeeroooo.materialfb.notifications.Scheduler;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 import me.zeeroooo.materialfb.R;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {

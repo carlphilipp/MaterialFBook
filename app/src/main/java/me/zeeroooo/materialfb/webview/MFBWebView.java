@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.WebView;
+package me.zeeroooo.materialfb.webview;
 
 import android.content.Context;
 import android.support.v4.view.NestedScrollingChild;

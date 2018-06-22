@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.WebView;
+package me.zeeroooo.materialfb.webview;
 
 import android.util.Base64;
 import android.webkit.WebView;

@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Activities;
+package me.zeeroooo.materialfb.activities;
 
 import android.Manifest;
 import android.app.DownloadManager;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -17,7 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,7 +32,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.Ui.CookingAToast;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 
 public class Video extends AppCompatActivity {
 

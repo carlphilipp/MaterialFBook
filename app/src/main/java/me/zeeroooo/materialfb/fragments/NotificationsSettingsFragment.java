@@ -1,9 +1,8 @@
 /*
  * Code taken from FaceSlim by indywidualny. Thanks.
  */
-package me.zeeroooo.materialfb.Fragments;
+package me.zeeroooo.materialfb.fragments;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.Ringtone;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -24,11 +22,10 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.zeeroooo.materialfb.BuildConfig;
-import me.zeeroooo.materialfb.Misc.BlackListH;
-import me.zeeroooo.materialfb.Misc.BlacklistAdapter;
-import me.zeeroooo.materialfb.Misc.DatabaseHelper;
-import me.zeeroooo.materialfb.Notifications.Scheduler;
+import me.zeeroooo.materialfb.misc.BlackListH;
+import me.zeeroooo.materialfb.misc.BlacklistAdapter;
+import me.zeeroooo.materialfb.misc.DatabaseHelper;
+import me.zeeroooo.materialfb.notifications.Scheduler;
 import me.zeeroooo.materialfb.R;
 
 public class NotificationsSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {

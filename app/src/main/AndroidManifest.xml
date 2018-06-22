@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".Activities.MFB"
+        android:name=".activities.MFB"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/MFB">
         <receiver
-            android:name=".Notifications.Receiver"
+            android:name=".notifications.Receiver"
             android:enabled="false"
             android:exported="false">
             <intent-filter>
@@ -33,14 +33,14 @@
         </receiver>
 
         <service
-            android:name=".Notifications.NotificationsJS"
+            android:name=".notifications.NotificationsJS"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".Notifications.NotificationsJIS"
+            android:name=".notifications.NotificationsJIS"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
@@ -104,27 +104,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.Photo"
+            android:name=".activities.Photo"
             android:configChanges="screenSize|orientation"
             android:launchMode="singleTask"
             android:theme="@style/Media" />
         <activity
-            android:name=".Activities.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:configChanges="screenSize|orientation"
             android:label="@string/settings"
             android:launchMode="singleTask"
-            android:parentActivityName=".Activities.MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/MFB"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".Activities.More"
+            android:name=".activities.More"
             android:launchMode="singleTask" />
         <activity
-            android:name=".Activities.Video"
+            android:name=".activities.Video"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Media" />

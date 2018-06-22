@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Misc;
+package me.zeeroooo.materialfb.misc;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.List;
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.Ui.CookingAToast;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 
 public class BlacklistAdapter extends ArrayAdapter<BlackListH> {
     private List<BlackListH> BlackLH;

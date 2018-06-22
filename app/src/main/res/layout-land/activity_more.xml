@@ -105,7 +105,7 @@
 
         <fragment
             android:id="@+id/fragment_settings"
-            android:name="me.zeeroooo.materialfb.Activities.More$MoreAndCredits"
+            android:name="me.zeeroooo.materialfb.activities.More$MoreAndCredits"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

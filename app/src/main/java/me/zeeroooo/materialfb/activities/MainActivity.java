@@ -4,7 +4,7 @@
  * - Folio for Facebook by creativetrendsapps. Thanks.
  * - Toffed by JakeLane. Thanks.
  */
-package me.zeeroooo.materialfb.Activities;
+package me.zeeroooo.materialfb.activities;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -67,15 +67,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import me.zeeroooo.materialfb.Misc.UserInfo;
-import me.zeeroooo.materialfb.Notifications.NotificationsJIS;
+import me.zeeroooo.materialfb.misc.UserInfo;
+import me.zeeroooo.materialfb.notifications.NotificationsJIS;
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.Ui.CookingAToast;
-import me.zeeroooo.materialfb.Ui.Theme;
-import me.zeeroooo.materialfb.WebView.Helpers;
-import me.zeeroooo.materialfb.WebView.JavaScriptHelpers;
-import me.zeeroooo.materialfb.WebView.JavaScriptInterfaces;
-import me.zeeroooo.materialfb.WebView.MFBWebView;
+import me.zeeroooo.materialfb.ui.CookingAToast;
+import me.zeeroooo.materialfb.ui.Theme;
+import me.zeeroooo.materialfb.webview.Helpers;
+import me.zeeroooo.materialfb.webview.JavaScriptHelpers;
+import me.zeeroooo.materialfb.webview.JavaScriptInterfaces;
+import me.zeeroooo.materialfb.webview.MFBWebView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

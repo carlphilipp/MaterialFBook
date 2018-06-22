@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Notifications;
+package me.zeeroooo.materialfb.notifications;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -36,11 +36,11 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.zeeroooo.materialfb.Activities.MainActivity;
-import me.zeeroooo.materialfb.Misc.DatabaseHelper;
+import me.zeeroooo.materialfb.activities.MainActivity;
+import me.zeeroooo.materialfb.misc.DatabaseHelper;
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.Ui.Theme;
-import me.zeeroooo.materialfb.WebView.Helpers;
+import me.zeeroooo.materialfb.ui.Theme;
+import me.zeeroooo.materialfb.webview.Helpers;
 
 public class NotificationsJIS extends JobIntentService {
     private SharedPreferences mPreferences;

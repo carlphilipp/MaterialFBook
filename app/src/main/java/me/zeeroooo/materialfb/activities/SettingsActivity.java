@@ -3,7 +3,7 @@
  * - FaceSlim by indywidualny. Thanks.
  * - Toffed by JakeLane. Thanks.
  */
-package me.zeeroooo.materialfb.Activities;
+package me.zeeroooo.materialfb.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,8 +12,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import me.zeeroooo.materialfb.Fragments.SettingsFragment;
-import me.zeeroooo.materialfb.Ui.Theme;
+import me.zeeroooo.materialfb.fragments.SettingsFragment;
+import me.zeeroooo.materialfb.ui.Theme;
 import me.zeeroooo.materialfb.R;
 
 public class SettingsActivity extends AppCompatActivity {

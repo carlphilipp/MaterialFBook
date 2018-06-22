@@ -1,6 +1,5 @@
-package me.zeeroooo.materialfb.Activities;
+package me.zeeroooo.materialfb.activities;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -12,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 
 import me.zeeroooo.materialfb.BuildConfig;
-import me.zeeroooo.materialfb.Ui.Theme;
+import me.zeeroooo.materialfb.ui.Theme;
 import me.zeeroooo.materialfb.R;
 
 public class More extends AppCompatActivity {

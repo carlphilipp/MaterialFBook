@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Activities;
+package me.zeeroooo.materialfb.activities;
 
 import android.app.Application;
 

@@ -1,9 +1,9 @@
-package me.zeeroooo.materialfb.WebView;
+package me.zeeroooo.materialfb.webview;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.webkit.JavascriptInterface;
-import me.zeeroooo.materialfb.Activities.MainActivity;
+import me.zeeroooo.materialfb.activities.MainActivity;
 
 @SuppressWarnings("unused")
 public class JavaScriptInterfaces {

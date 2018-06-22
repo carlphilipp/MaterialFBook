@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Fragments;
+package me.zeeroooo.materialfb.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

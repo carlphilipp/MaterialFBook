@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Notifications;
+package me.zeeroooo.materialfb.notifications;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

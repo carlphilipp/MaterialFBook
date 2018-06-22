@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.Notifications;
+package me.zeeroooo.materialfb.notifications;
 
 import android.annotation.TargetApi;
 import android.app.job.JobParameters;
