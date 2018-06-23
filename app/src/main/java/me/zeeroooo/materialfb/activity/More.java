@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.activities;
+package me.zeeroooo.materialfb.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

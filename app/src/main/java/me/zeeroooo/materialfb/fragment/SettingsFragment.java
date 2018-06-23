@@ -1,7 +1,7 @@
 /**
  * Code taken from FaceSlim by indywidualny. Thanks.
  **/
-package me.zeeroooo.materialfb.fragments;
+package me.zeeroooo.materialfb.fragment;
 
 import android.Manifest;
 import android.content.Intent;
@@ -10,25 +10,24 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import me.zeeroooo.materialfb.R;
+import me.zeeroooo.materialfb.activity.More;
+import me.zeeroooo.materialfb.notification.Scheduler;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 
 import java.util.Locale;
 
-import me.zeeroooo.materialfb.activities.More;
-import me.zeeroooo.materialfb.notifications.Scheduler;
-import me.zeeroooo.materialfb.ui.CookingAToast;
-import me.zeeroooo.materialfb.R;
-
-public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
     private SharedPreferences mPreferences;
     private Scheduler mScheduler;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -53,17 +52,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     @Override
-    public boolean onPreferenceClick(Preference preference) {
+    public void onCreatePreferences(final Bundle bundle, final String s) {
+        // TODO ?
+    }
+
+    @Override
+    public boolean onPreferenceClick(final Preference preference) {
         switch (preference.getKey()) {
             case "notifications_settings":
-                getFragmentManager().beginTransaction()
-                        .addToBackStack(null).replace(R.id.content_frame,
-                        new NotificationsSettingsFragment()).commit();
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.content_frame, new NotificationsSettingsFragment()).commit();
                 return true;
             case "navigation_menu_settings":
-                getFragmentManager().beginTransaction()
-                        .addToBackStack(null).replace(R.id.content_frame,
-                        new NavigationMenuFragment()).commit();
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.content_frame, new NavigationMenuFragment()).commit();
                 return true;
             case "moreandcredits":
                 startActivity(new Intent(getActivity(), More.class));

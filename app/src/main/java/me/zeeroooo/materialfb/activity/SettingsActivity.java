@@ -3,7 +3,7 @@
  * - FaceSlim by indywidualny. Thanks.
  * - Toffed by JakeLane. Thanks.
  */
-package me.zeeroooo.materialfb.activities;
+package me.zeeroooo.materialfb.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import me.zeeroooo.materialfb.fragments.SettingsFragment;
+import me.zeeroooo.materialfb.fragment.SettingsFragment;
 import me.zeeroooo.materialfb.ui.Theme;
 import me.zeeroooo.materialfb.R;
 
@@ -26,9 +26,11 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getWindow().setNavigationBarColor(getApplicationContext().getColor(R.color.MFBPrimaryDark));
+        getWindow().setStatusBarColor(getApplicationContext().getColor(R.color.MFBPrimary));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new SettingsFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new SettingsFragment()).commit();
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  * Code taken from FaceSlim by indywidualny. Thanks.
  */
-package me.zeeroooo.materialfb.fragments;
+package me.zeeroooo.materialfb.fragment;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -9,26 +9,24 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import me.zeeroooo.materialfb.R;
+import me.zeeroooo.materialfb.misc.BlackListH;
+import me.zeeroooo.materialfb.misc.BlacklistAdapter;
+import me.zeeroooo.materialfb.misc.DatabaseHelper;
+import me.zeeroooo.materialfb.notification.Scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.zeeroooo.materialfb.misc.BlackListH;
-import me.zeeroooo.materialfb.misc.BlacklistAdapter;
-import me.zeeroooo.materialfb.misc.DatabaseHelper;
-import me.zeeroooo.materialfb.notifications.Scheduler;
-import me.zeeroooo.materialfb.R;
-
-public class NotificationsSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+public class NotificationsSettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
     private SharedPreferences preferences;
     private DatabaseHelper DBHelper;
@@ -68,6 +66,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                 }
             });
         }
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+        // TODO ?
     }
 
     private void reschedule(SharedPreferences prefs) {
@@ -137,7 +140,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         if ("".equals(ringtoneString))
             name = getString(R.string.silent);
 
-        RingtonePreference rpn = (RingtonePreference) findPreference("ringtone");
+        Preference rpn = findPreference("ringtone");
         rpn.setSummary(getString(R.string.notification_sound_description) + name);
 
         // update message ringtone preference summary
@@ -155,7 +158,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         if ("".equals(ringtoneString))
             name = getString(R.string.silent);
 
-        RingtonePreference rpm = (RingtonePreference) findPreference("ringtone_msg");
+        Preference rpm = findPreference("ringtone_msg");
         rpm.setSummary(getString(R.string.notification_sound_description) + name);
     }
 }

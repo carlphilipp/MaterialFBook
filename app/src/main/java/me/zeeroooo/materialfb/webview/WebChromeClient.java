@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.activities.MainActivity;
+import me.zeeroooo.materialfb.activity.MainActivity;
 
 public class WebChromeClient extends android.webkit.WebChromeClient {
 

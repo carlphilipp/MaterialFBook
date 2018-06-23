@@ -1,7 +1,6 @@
-package me.zeeroooo.materialfb.activities;
+package me.zeeroooo.materialfb.activity;
 
 import android.app.Application;
-
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
@@ -10,9 +9,9 @@ import org.acra.annotation.ReportsCrashes;
  */
 
 @ReportsCrashes(mailTo = "putYourOwnEmail...")
-public class MFB extends Application {
+public class MaterialFacebookApplication extends Application {
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
         ACRA.init(this);
     }

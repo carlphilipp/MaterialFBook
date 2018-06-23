@@ -19,8 +19,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.activities.MainActivity;
-import me.zeeroooo.materialfb.activities.Photo;
+import me.zeeroooo.materialfb.activity.MainActivity;
+import me.zeeroooo.materialfb.activity.Photo;
 
 public class WebViewClient extends android.webkit.WebViewClient {
 

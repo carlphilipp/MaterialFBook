@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.notifications;
+package me.zeeroooo.materialfb.notification;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -36,7 +36,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.zeeroooo.materialfb.activities.MainActivity;
+import me.zeeroooo.materialfb.activity.MainActivity;
 import me.zeeroooo.materialfb.misc.DatabaseHelper;
 import me.zeeroooo.materialfb.R;
 import me.zeeroooo.materialfb.ui.Theme;

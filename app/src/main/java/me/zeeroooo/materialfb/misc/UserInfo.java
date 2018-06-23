@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import me.zeeroooo.materialfb.activities.MainActivity;
+import me.zeeroooo.materialfb.activity.MainActivity;
 import me.zeeroooo.materialfb.R;
 import me.zeeroooo.materialfb.webview.Helpers;
 import org.jsoup.Jsoup;

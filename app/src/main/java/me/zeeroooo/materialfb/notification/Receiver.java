@@ -1,4 +1,4 @@
-package me.zeeroooo.materialfb.notifications;
+package me.zeeroooo.materialfb.notification;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
