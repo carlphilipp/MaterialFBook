@@ -12,7 +12,7 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
--keepclassmembers class me.zeeroooo.materialfb.WebView.JavaScriptInterfaces {
+-keepclassmembers class me.zeeroooo.materialfb.webview.JavaScriptInterfaces {
    public *;
 }
 
@@ -32,4 +32,4 @@
 }
 
 -keep,includedescriptorclasses class com.github.clans.fab.FloatingActionMenu { *; }
--keep,includedescriptorclasses class me.zeeroooo.materialfb.WebView.MFBWebView { *; }
+-keep,includedescriptorclasses class me.zeeroooo.materialfb.webview.MFBWebView { *; }

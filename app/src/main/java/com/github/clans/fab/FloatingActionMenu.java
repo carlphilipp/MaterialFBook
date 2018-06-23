@@ -674,33 +674,27 @@ public class FloatingActionMenu extends ViewGroup {
                     counter++;
 
                     final FloatingActionButton fab = (FloatingActionButton) child;
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isOpened()) return;
+                    mUiHandler.postDelayed(() -> {
+                        if (!isOpened()) return;
 
-                            if (fab != mMenuButton) {
-                                fab.hide(animate);
-                            }
+                        if (fab != mMenuButton) {
+                            fab.hide(animate);
+                        }
 
-                            Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (label != null && label.isHandleVisibilityChanges()) {
-                                label.hide(animate);
-                            }
+                        Label label = (Label) fab.getTag(R.id.fab_label);
+                        if (label != null && label.isHandleVisibilityChanges()) {
+                            label.hide(animate);
                         }
                     }, delay);
                     delay += mAnimationDelayPerItem;
                 }
             }
 
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mMenuOpened = false;
+            mUiHandler.postDelayed(() -> {
+                mMenuOpened = false;
 
-                    if (mToggleListener != null) {
-                        mToggleListener.onMenuToggle(false);
-                    }
+                if (mToggleListener != null) {
+                    mToggleListener.onMenuToggle(false);
                 }
             }, ++counter * mAnimationDelayPerItem);
         }
@@ -748,15 +742,12 @@ public class FloatingActionMenu extends ViewGroup {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
                 close(animate);
-                mUiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (animate) {
-                            startAnimation(mMenuButtonHideAnimation);
-                        }
-                        setVisibility(INVISIBLE);
-                        mIsMenuButtonAnimationRunning = false;
+                mUiHandler.postDelayed(() -> {
+                    if (animate) {
+                        startAnimation(mMenuButtonHideAnimation);
                     }
+                    setVisibility(INVISIBLE);
+                    mIsMenuButtonAnimationRunning = false;
                 }, mAnimationDelayPerItem * mButtonsCount);
             } else {
                 if (animate) {
