@@ -14,6 +14,7 @@
         <item name="colorPrimary">@color/MFBPrimary</item>
         <item name="colorPrimaryDark">@color/MFBPrimaryDark</item>
         <item name="colorAccent">@color/MFBPrimaryDark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Pink" parent="Theme.AppCompat.Light.NoActionBar">

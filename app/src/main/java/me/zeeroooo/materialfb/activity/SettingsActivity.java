@@ -36,14 +36,14 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        int count = getFragmentManager().getBackStackEntryCount();
+        int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0) {
             Intent apply = new Intent(this, MainActivity.class);
             apply.putExtra("apply", true);
             startActivity(apply);
             finish();
         } else
-            getFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack();
     }
 
     @Override

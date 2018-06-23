@@ -38,7 +38,7 @@ import android.widget.TextView;
 import com.github.clans.fab.FloatingActionMenu;
 import me.zeeroooo.materialfb.R;
 import me.zeeroooo.materialfb.listener.FabOnClickListener;
-import me.zeeroooo.materialfb.misc.UserInfo;
+import me.zeeroooo.materialfb.misc.UserInfoAsyncTask;
 import me.zeeroooo.materialfb.misc.Utils;
 import me.zeeroooo.materialfb.ui.CookingAToast;
 import me.zeeroooo.materialfb.ui.Theme;
@@ -64,19 +64,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private FloatingActionMenu floatingActionMenu;
     private SwipeRefreshLayout swipeView;
+    private TextView mostRecentTv;
+    private TextView friendsRegTv;
 
     private String baseURL;
     private String cameraPhotoPath;
     private StringBuilder css = new StringBuilder();
     private String url;
-    private String urlIntent = null;
+    private String urlIntent;
 
     private ValueCallback<Uri[]> filePathCallback;
     private Uri sharedFromGallery;
     private DownloadManager downloadManager;
-    private Handler badgeUpdate;
+
+    private Handler badgeUpdateHandler;
     private Runnable badgeTask;
-    private TextView mostRecentTv, friendsRegTv;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupColor();
         setupBaseUrl();
         loadWebViewUrl();
-        setupNavigation();
+        setupNavigationView();
         setupSwipeView();
         setupWebView();
         setupFabListener();
@@ -150,13 +152,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         webView.resumeTimers();
 
         if (Helpers.getCookie() != null && !preferences.getBoolean("save_data", false)) {
-            badgeUpdate = new Handler();
+            badgeUpdateHandler = new Handler();
             badgeTask = () -> {
                 JavaScriptHelpers.updateNumsService(webView);
-                badgeUpdate.postDelayed(badgeTask, 15000);
+                badgeUpdateHandler.postDelayed(badgeTask, 15000);
             };
             badgeTask.run();
-            new UserInfo(MainActivity.this).execute();
+            new UserInfoAsyncTask(this).execute();
         }
     }
 
@@ -164,8 +166,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause() {
         super.onPause();
         webView.onPause();
-        if (badgeTask != null && badgeUpdate != null)
-            badgeUpdate.removeCallbacks(badgeTask);
+        if (badgeTask != null && badgeUpdateHandler != null)
+            badgeUpdateHandler.removeCallbacks(badgeTask);
     }
 
     @Override
@@ -175,8 +177,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         webView.clearHistory();
         webView.removeAllViews();
         webView.destroy();
-        if (badgeTask != null && badgeUpdate != null)
-            badgeUpdate.removeCallbacks(badgeTask);
+        if (badgeTask != null && badgeUpdateHandler != null)
+            badgeUpdateHandler.removeCallbacks(badgeTask);
         if (preferences.getBoolean("clear_cache", false))
             Utils.deleteCache(this);
     }
@@ -352,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return webView;
     }
 
-    private void setupNavigation() {
+    private void setupNavigationView() {
         navigationView.setNavigationItemSelectedListener(this);
         // Hide buttons if they are disabled
         if (!preferences.getBoolean("nav_groups", false))
@@ -479,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (intent.getDataString() != null) {
             urlIntent = getIntent().getDataString();
             if (intent.getDataString().contains("profile"))
-                urlIntent.replace("fb://profile/", "https://facebook.com/");
+                urlIntent = urlIntent.replace("fb://profile/", "https://facebook.com/");
         }
 
         if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {

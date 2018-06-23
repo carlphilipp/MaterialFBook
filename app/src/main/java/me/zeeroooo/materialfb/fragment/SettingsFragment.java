@@ -23,14 +23,14 @@ import java.util.Locale;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
-    private SharedPreferences mPreferences;
+    private SharedPreferences preferences;
     private Scheduler mScheduler;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mScheduler = new Scheduler(getActivity());
 
         // set onPreferenceClickListener for a few preferences
@@ -82,8 +82,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     private void setScheduler() {
-        if (mPreferences.getBoolean("notif", false) && !mPreferences.getBoolean("save_data", false))
-            mScheduler.schedule(Integer.parseInt(mPreferences.getString("notif_interval", "60000")), true);
+        if (preferences.getBoolean("notif", false) && !preferences.getBoolean("save_data", false))
+            mScheduler.schedule(Integer.parseInt(preferences.getString("notif_interval", "60000")), true);
         else
             mScheduler.cancel();
     }
