@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        // Used when uploading a file
         // Thanks to Koras for the tutorial. http://dev.indywidualni.org/2015/02/an-advanced-webview-with-some-cool-features
         if (requestCode != INPUT_FILE_REQUEST_CODE || filePathCallback == null)
             return;
@@ -452,14 +453,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         t.setTextColor(color);
         t.setGravity(Gravity.CENTER_VERTICAL);
         t.setTypeface(null, Typeface.BOLD);
-        if (i > 0)
-            t.setVisibility(View.VISIBLE);
-        else
-            t.setVisibility(View.INVISIBLE);
+        t.setVisibility(i > 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void setupBaseUrl() {
-        baseURL = (!preferences.getBoolean("save_data", false))
+        baseURL = !preferences.getBoolean("save_data", false)
                 ? "https://m.facebook.com/"
                 : "https://mbasic.facebook.com/";
     }

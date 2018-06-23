@@ -24,8 +24,8 @@ public class SettingsActivity extends AppCompatActivity {
         Theme.Temas(this, mPreferences);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Toolbar mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getWindow().setNavigationBarColor(getApplicationContext().getColor(R.color.MFBPrimaryDark));
         getWindow().setStatusBarColor(getApplicationContext().getColor(R.color.MFBPrimary));
         if (getSupportActionBar() != null) {

@@ -8,13 +8,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -26,23 +25,22 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
+import me.zeeroooo.materialfb.R;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 
 import java.io.File;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import me.zeeroooo.materialfb.R;
-import me.zeeroooo.materialfb.ui.CookingAToast;
-
 public class Video extends AppCompatActivity {
 
-    private VideoView mVideoView;
+    private VideoView videoView;
     private int position = 0;
-    private DownloadManager mDownloadManager;
-    private RelativeLayout mButtonsHeader;
-    private SeekBar mSeekbar;
+    private DownloadManager downloadManager;
+    private RelativeLayout buttonsHeader;
+    private SeekBar seekbar;
     private String url;
-    private TextView mElapsedTime, mRemainingTime;
+    private TextView elapsedTime, remainingTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,39 +49,39 @@ public class Video extends AppCompatActivity {
 
         url = getIntent().getStringExtra("video_url");
 
-        mVideoView = findViewById(R.id.video_view);
-        mButtonsHeader = findViewById(R.id.buttons_header);
-        mSeekbar = findViewById(R.id.progress);
-        mDownloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-        mElapsedTime = findViewById(R.id.elapsed_time);
-        mRemainingTime = findViewById(R.id.remaining_time);
+        videoView = findViewById(R.id.video_view);
+        buttonsHeader = findViewById(R.id.buttons_header);
+        seekbar = findViewById(R.id.progress);
+        downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        elapsedTime = findViewById(R.id.elapsed_time);
+        remainingTime = findViewById(R.id.remaining_time);
 
-        mSeekbar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-        mSeekbar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        seekbar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        seekbar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
 
-        mVideoView.setVideoURI(Uri.parse(url));
+        videoView.setVideoURI(Uri.parse(url));
 
-        mVideoView.requestFocus();
-        mVideoView.setOnPreparedListener(mediaPlayer -> {
-            mVideoView.seekTo(position);
-            mSeekbar.setMax(mVideoView.getDuration());
-            mSeekbar.postDelayed(Update, 1000);
-            mElapsedTime.postDelayed(Update, 1000);
-            mRemainingTime.postDelayed(Update, 1000);
+        videoView.requestFocus();
+        videoView.setOnPreparedListener(mediaPlayer -> {
+            videoView.seekTo(position);
+            seekbar.setMax(videoView.getDuration());
+            seekbar.postDelayed(Update, 1000);
+            elapsedTime.postDelayed(Update, 1000);
+            remainingTime.postDelayed(Update, 1000);
             setVisibility(View.GONE, android.R.anim.fade_out);
             if (position == 0)
-                mVideoView.start();
+                videoView.start();
         });
 
         // Buttons
         final ImageButton pause = findViewById(R.id.pauseplay_btn);
         setBackground(pause);
         pause.setOnClickListener(v -> {
-            if (mVideoView.isPlaying()) {
-                mVideoView.pause();
+            if (videoView.isPlaying()) {
+                videoView.pause();
                 ((ImageButton) v).setImageResource(android.R.drawable.ic_media_play);
             } else {
-                mVideoView.start();
+                videoView.start();
                 ((ImageButton) v).setImageResource(android.R.drawable.ic_media_pause);
             }
         });
@@ -91,15 +89,15 @@ public class Video extends AppCompatActivity {
         final ImageButton previous = findViewById(R.id.previous_btn);
         setBackground(previous);
         previous.setOnClickListener(v -> {
-            mVideoView.seekTo(0);
-            mSeekbar.setProgress(0);
+            videoView.seekTo(0);
+            seekbar.setProgress(0);
         });
 
         final ImageButton download = findViewById(R.id.download_btn);
         setBackground(download);
         download.setOnClickListener(v -> RequestStoragePermission());
 
-        mVideoView.setOnTouchListener((v, event) -> {
+        videoView.setOnTouchListener((v, event) -> {
             setCountDown();
             setVisibility(View.VISIBLE, android.R.anim.fade_in);
             return false;
@@ -114,7 +112,7 @@ public class Video extends AppCompatActivity {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.context_share_link)));
         });
 
-        mSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -127,7 +125,7 @@ public class Video extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser)
-                    mVideoView.seekTo(progress);
+                    videoView.seekTo(progress);
             }
         });
     }
@@ -151,18 +149,18 @@ public class Video extends AppCompatActivity {
     private final Runnable Update = new Runnable() {
         @Override
         public void run() {
-            if (mSeekbar != null) {
-                mSeekbar.setProgress(mVideoView.getCurrentPosition());
+            if (seekbar != null) {
+                seekbar.setProgress(videoView.getCurrentPosition());
             }
-            if (mVideoView.isPlaying()) {
-                mSeekbar.postDelayed(Update, 1000);
-                mElapsedTime.setText(Time(mVideoView.getCurrentPosition()));
-                mRemainingTime.setText(Time(mVideoView.getDuration() - mVideoView.getCurrentPosition()));
+            if (videoView.isPlaying()) {
+                seekbar.postDelayed(Update, 1000);
+                elapsedTime.setText(time(videoView.getCurrentPosition()));
+                remainingTime.setText(time(videoView.getDuration() - videoView.getCurrentPosition()));
             }
         }
     };
 
-    private String Time(long ms) {
+    private String time(long ms) {
         return String.format(Locale.getDefault(), "%d:%d", TimeUnit.MILLISECONDS.toMinutes(ms), TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((ms))));
     }
 
@@ -189,7 +187,7 @@ public class Video extends AppCompatActivity {
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
                     // Start the download
-                    mDownloadManager.enqueue(request);
+                    downloadManager.enqueue(request);
 
                     CookingAToast.cooking(this, getString(R.string.downloaded), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_download, false).show();
                 } else
@@ -201,15 +199,15 @@ public class Video extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        position = mVideoView.getCurrentPosition();
-        mVideoView.pause();
+        position = videoView.getCurrentPosition();
+        videoView.pause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mVideoView.seekTo(position);
-        mVideoView.start();
+        videoView.seekTo(position);
+        videoView.start();
     }
 
     private void setCountDown() {
@@ -228,17 +226,13 @@ public class Video extends AppCompatActivity {
     public void setVisibility(int visibility, int animation) {
         Animation a = AnimationUtils.loadAnimation(this, animation);
 
-        mButtonsHeader.startAnimation(a);
-        mButtonsHeader.setVisibility(visibility);
+        buttonsHeader.startAnimation(a);
+        buttonsHeader.setVisibility(visibility);
     }
 
     private void setBackground(View btn) {
         TypedValue typedValue = new TypedValue();
-        int bg;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            bg = android.R.attr.selectableItemBackgroundBorderless;
-        else
-            bg = android.R.attr.selectableItemBackground;
+        int bg = android.R.attr.selectableItemBackgroundBorderless;
         getTheme().resolveAttribute(bg, typedValue, true);
         btn.setBackgroundResource(typedValue.resourceId);
     }

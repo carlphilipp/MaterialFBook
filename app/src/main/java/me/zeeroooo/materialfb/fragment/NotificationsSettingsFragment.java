@@ -29,7 +29,7 @@ import java.util.List;
 public class NotificationsSettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
     private SharedPreferences preferences;
-    private DatabaseHelper DBHelper;
+    private DatabaseHelper databaseHelper;
     private BlackListH blh;
     private BlacklistAdapter adapter;
     private List<BlackListH> blacklist;
@@ -41,8 +41,8 @@ public class NotificationsSettingsFragment extends PreferenceFragmentCompat impl
         addPreferencesFromResource(R.xml.notifications_settings);
         if (getActivity() != null) {
             preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            DBHelper = new DatabaseHelper(getActivity());
-            cursor = DBHelper.getReadableDatabase().rawQuery("SELECT BL FROM mfb_table", null);
+            databaseHelper = new DatabaseHelper(getActivity());
+            cursor = databaseHelper.getReadableDatabase().rawQuery("SELECT BL FROM mfb_table", null);
             blacklist = new ArrayList<>();
             while (cursor != null && cursor.moveToNext()) {
                 if (cursor.getString(0) != null) {
@@ -83,7 +83,7 @@ public class NotificationsSettingsFragment extends PreferenceFragmentCompat impl
     public void onStop() {
         super.onStop();
         if (!cursor.isClosed()) {
-            DBHelper.close();
+            databaseHelper.close();
             cursor.close();
         }
     }
@@ -98,7 +98,7 @@ public class NotificationsSettingsFragment extends PreferenceFragmentCompat impl
                 final EditText blword = view.findViewById(R.id.blword_new);
                 BlacklistDialog.setView(view);
                 BlacklistDialog.setTitle(R.string.blacklist_title);
-                adapter = new BlacklistAdapter(getActivity(), blacklist, DBHelper);
+                adapter = new BlacklistAdapter(getActivity(), blacklist, databaseHelper);
                 ListView BlackListView = view.findViewById(R.id.BlackListView);
                 BlackListView.setAdapter(adapter);
 
@@ -106,7 +106,7 @@ public class NotificationsSettingsFragment extends PreferenceFragmentCompat impl
                     String word = blword.getText().toString();
                     if (!word.equals("")) {
                         blh = new BlackListH(word);
-                        DBHelper.addData(null, null, blh.getWord());
+                        databaseHelper.addData(null, null, blh.getWord());
                         blacklist.add(blh);
                         adapter.notifyDataSetChanged();
                     }

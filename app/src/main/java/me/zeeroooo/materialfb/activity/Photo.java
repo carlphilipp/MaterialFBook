@@ -86,11 +86,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
         webView.getSettings().setBlockNetworkImage(true);
         webView.getSettings().setAppCacheEnabled(false);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-
-        if (Build.VERSION.SDK_INT >= 19)
-            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        else
-            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         webView.loadUrl(getIntent().getStringExtra("link"));
