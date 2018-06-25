@@ -53,7 +53,7 @@ public class MFBWebView extends WebView implements NestedScrollingChild {
         getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         setLayerType(View.LAYER_TYPE_HARDWARE, null);
         getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux ARM) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+        getSettings().setUserAgentString("Mozilla/5.0 (Linux; U; Android 2.3.6; en-us; Nexus S Build/GRK39F) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
     }
 
     @Override

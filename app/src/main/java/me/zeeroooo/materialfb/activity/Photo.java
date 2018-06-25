@@ -54,28 +54,28 @@ import me.zeeroooo.materialfb.ui.CookingAToast;
 
 public class Photo extends AppCompatActivity implements View.OnTouchListener {
 
-    private ImageView mImageView;
-    private DownloadManager mDownloadManager;
-    private Target<Bitmap> ShareTarget;
+    private ImageView imageView;
+    private DownloadManager downloadManager;
+    private Target<Bitmap> shareTarget;
     private boolean download = false, countdown = false;
     private Matrix matrix = new Matrix(), savedMatrix = new Matrix();
     private int NONE = 0, mode = NONE, share = 0;
     private PointF start = new PointF(), mid = new PointF();
     private float oldDist = 1f;
     private View imageTitle, topGradient;
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
     private String imageUrl;
     private WebView webView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-        mImageView = findViewById(R.id.container);
-        mImageView.setOnTouchListener(this);
+        imageView = findViewById(R.id.container);
+        imageView.setOnTouchListener(this);
         topGradient = findViewById(R.id.photoViewerTopGradient);
-        mToolbar = findViewById(R.id.toolbar_ph);
-        setSupportActionBar(mToolbar);
+        toolbar = findViewById(R.id.toolbar_ph);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -93,17 +93,17 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
             @Override
             public void onPageFinished(WebView view, String url) {
                 imageUrl = url;
-                Load();
+                load();
             }
         });
 
         imageTitle = findViewById(R.id.photo_title);
         ((TextView) imageTitle).setText(getIntent().getStringExtra("title"));
-        mDownloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(final boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             Window window = getWindow();
@@ -119,7 +119,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(final View v, final MotionEvent event) {
         int DRAG = 1, ZOOM = 2;
         setVisibility(View.VISIBLE, android.R.anim.fade_in);
         setCountDown();
@@ -162,19 +162,19 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
                 break;
         }
 
-        mImageView.setImageMatrix(matrix);
+        imageView.setImageMatrix(matrix);
         v.performClick();
 
         return true;
     }
 
-    private float spacing(MotionEvent event) {
+    private float spacing(final MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
         return (float) Math.sqrt(x * x + y * y);
     } // https://stackoverflow.com/a/6650484 all the credits to Chirag Raval
 
-    private void Load() {
+    private void load() {
         Glide.with(this)
                 .load(imageUrl)
                 .listener(new RequestListener<Drawable>() {
@@ -185,24 +185,24 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mImageView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        imageView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                         findViewById(android.R.id.progress).setVisibility(View.GONE);
                         setCountDown();
                         return false;
                     }
                 })
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
-                .into(mImageView);
+                .into(imageView);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.photo, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.download_image) {
             download = true;
@@ -225,7 +225,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
     }
 
     private void shareImg() {
-        ShareTarget = new SimpleTarget<Bitmap>() {
+        shareTarget = new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                 String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, Uri.parse(imageUrl).getLastPathSegment(), null);
@@ -236,7 +236,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
                 CookingAToast.cooking(Photo.this, getString(R.string.context_share_image_progress), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_share, false).show();
             }
         };
-        Glide.with(Photo.this).asBitmap().load(imageUrl).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(ShareTarget);
+        Glide.with(Photo.this).asBitmap().load(imageUrl).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(shareTarget);
         share = 2;
     }
 
@@ -245,7 +245,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String permissions[], @NonNull final int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -267,7 +267,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
                         // Start the download
-                        mDownloadManager.enqueue(request);
+                        downloadManager.enqueue(request);
 
                         CookingAToast.cooking(this, getString(R.string.downloaded), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_download, false).show();
                         download = false;
@@ -288,10 +288,10 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
     public void onDestroy() {
         super.onDestroy();
         if (!(share == 2)) {
-            if (ShareTarget != null)
-                Glide.with(Photo.this).clear(ShareTarget);
-            if (mImageView != null)
-                mImageView.setImageDrawable(null);
+            if (shareTarget != null)
+                Glide.with(Photo.this).clear(shareTarget);
+            if (imageView != null)
+                imageView.setImageDrawable(null);
         }
         webView.clearCache(true);
         webView.clearHistory();
@@ -317,15 +317,15 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
             countDownTimer.cancel();
     }
 
-    public void setVisibility(int visibility, int animation) {
+    public void setVisibility(final int visibility, final int animation) {
         Animation a = AnimationUtils.loadAnimation(this, animation);
 
         topGradient.startAnimation(a);
-        mToolbar.startAnimation(a);
+        toolbar.startAnimation(a);
         imageTitle.startAnimation(a);
 
         topGradient.setVisibility(visibility);
-        mToolbar.setVisibility(visibility);
+        toolbar.setVisibility(visibility);
         imageTitle.setVisibility(visibility);
     }
 }
