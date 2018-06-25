@@ -1,13 +1,13 @@
 package me.zeeroooo.materialfb.webview;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.UrlQuerySanitizer;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -21,9 +21,11 @@ import java.io.IOException;
 import me.zeeroooo.materialfb.R;
 import me.zeeroooo.materialfb.activity.MainActivity;
 import me.zeeroooo.materialfb.activity.Photo;
+import me.zeeroooo.materialfb.activity.Video;
 
 public class WebViewClient extends android.webkit.WebViewClient {
 
+    private static final String TAG = WebViewClient.class.getSimpleName();
     private final MainActivity activity;
     private Elements elements;
 
@@ -31,15 +33,10 @@ public class WebViewClient extends android.webkit.WebViewClient {
         this.activity = activity;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public boolean shouldOverrideUrlLoading(final WebView view, final WebResourceRequest request) {
-        return shouldOverrideUrlLoading(view, request.getUrl().toString());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+        String url = request.getUrl().toString();
+        Log.i(TAG, "URL: " + url);
         // clean an url from facebook redirection before processing (no more blank pages on back)
         url = Helpers.cleanAndDecodeUrl(url);
 
@@ -56,6 +53,13 @@ public class WebViewClient extends android.webkit.WebViewClient {
                 || Uri.parse(url).getHost().endsWith("cdn.fbsbx.com")
                 || Uri.parse(url).getHost().endsWith("lookaside.fbsbx.com"))) {
             return false;
+        }
+
+        if (url.contains("video-ort2-1.xx.fbcdn.net")) {
+            Intent Video = new Intent(activity, Video.class);
+            Video.putExtra("video_url", url);
+            activity.startActivity(Video);
+            return true;
         }
 
         if (url.contains("giphy") || url.contains("gifspace") || url.contains("tumblr") || url.contains("gph.is") || url.contains("gif") || url.contains("fbcdn.net") || url.contains("imgur")) {
@@ -136,14 +140,16 @@ public class WebViewClient extends android.webkit.WebViewClient {
 
     @Override
     public void onLoadResource(final WebView view, final String url) {
+        Log.i(TAG, "Load resource " + url);
         JavaScriptHelpers.videoView(view);
         if (activity.getSwipeView().isRefreshing())
             JavaScriptHelpers.loadCSS(view, activity.getCss().toString());
         if (url.contains("facebook.com/composer/mbasic/") || url.contains("https://m.facebook.com/sharer.php?sid="))
             activity.getCss().append("#page{top:0}");
 
-        if (url.contains("/photos/viewer/"))
-            imageLoader(activity.getBaseURL() + "photo/view_full_size/?fbid=" + url.substring(url.indexOf("photo=") + 6).split("&")[0], view);
+        // Do not start Photo activity anymore when clicking on a photo in news feed
+        //if (url.contains("/photos/viewer/"))
+        //    imageLoader(activity.getBaseURL() + "photo/view_full_size/?fbid=" + url.substring(url.indexOf("photo=") + 6).split("&")[0], view);
 
         if (url.contains("/photo/view_full_size/?fbid="))
             imageLoader(url.split("&ref_component")[0], view);
@@ -227,7 +233,7 @@ public class WebViewClient extends android.webkit.WebViewClient {
             view.loadUrl("javascript:(function(){try{document.querySelector('button#u_0_1.btn.btnD.mfss.touchable').click()}catch(_){}})()");
         }
 
-        if (activity.getPreferences().getBoolean("hide_menu_bar", true))
+        if (activity.getPreferences().getBoolean("hide_menu_bar", false))
             activity.getCss().append("#page{top:-45px}");
         // Hide the status editor on the News Feed if setting is enabled
         if (activity.getPreferences().getBoolean("hide_editor_newsfeed", true))
@@ -262,7 +268,7 @@ public class WebViewClient extends android.webkit.WebViewClient {
                     Document document = Jsoup.connect(url).get();
                     elements = document.select(select).select(select2);
                 } catch (IOException ioex) {
-                    ioex.getStackTrace();
+                    Log.e(TAG, ioex.getMessage(), ioex);
                 }
                 return null;
             }

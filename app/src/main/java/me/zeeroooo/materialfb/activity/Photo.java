@@ -13,7 +13,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -50,8 +49,8 @@ import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 
-import me.zeeroooo.materialfb.ui.CookingAToast;
 import me.zeeroooo.materialfb.R;
+import me.zeeroooo.materialfb.ui.CookingAToast;
 
 public class Photo extends AppCompatActivity implements View.OnTouchListener {
 
