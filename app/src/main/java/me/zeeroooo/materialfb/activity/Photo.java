@@ -250,6 +250,18 @@ public class Photo extends AppCompatActivity implements OnPhotoTapListener {
         webView.destroy();
     }
 
+    public void setVisibility(final int visibility, final int animation) {
+        Animation a = AnimationUtils.loadAnimation(this, animation);
+
+        topGradient.startAnimation(a);
+        toolbar.startAnimation(a);
+        imageTitle.startAnimation(a);
+
+        topGradient.setVisibility(visibility);
+        toolbar.setVisibility(visibility);
+        imageTitle.setVisibility(visibility);
+    }
+
     private void setCountDown() {
         CountDownTimer countDownTimer = new CountDownTimer(5000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -266,17 +278,5 @@ public class Photo extends AppCompatActivity implements OnPhotoTapListener {
             countDownTimer.start();
         else
             countDownTimer.cancel();
-    }
-
-    public void setVisibility(final int visibility, final int animation) {
-        Animation a = AnimationUtils.loadAnimation(this, animation);
-
-        topGradient.startAnimation(a);
-        toolbar.startAnimation(a);
-        imageTitle.startAnimation(a);
-
-        topGradient.setVisibility(visibility);
-        toolbar.setVisibility(visibility);
-        imageTitle.setVisibility(visibility);
     }
 }

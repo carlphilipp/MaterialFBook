@@ -52,7 +52,7 @@ public class WebViewClient extends android.webkit.WebViewClient {
             return false;
         }
 
-        if (url.contains("video-ort2-1.xx.fbcdn.net")) {
+        if (url.contains("video-ort2-1.xx.fbcdn.net") || url.contains("video.ford4-1.fna.fbcdn.net")) {
             Intent Video = new Intent(activity, Video.class);
             Video.putExtra("video_url", url);
             activity.startActivity(Video);
@@ -274,7 +274,6 @@ public class WebViewClient extends android.webkit.WebViewClient {
     private void imageLoader(final String url, final WebView view) {
         activity.startActivity(new Intent(activity, Photo.class).putExtra("link", url).putExtra("title", view.getTitle()));
         view.stopLoading();
-        view.goBack();
     }
 
     private void RequestStoragePermission() {
