@@ -20,8 +20,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Theme.Temas(this, mPreferences);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Theme.Temas(this, preferences);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = findViewById(R.id.toolbar);

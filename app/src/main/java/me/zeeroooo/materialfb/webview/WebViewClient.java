@@ -137,6 +137,7 @@ public class WebViewClient extends android.webkit.WebViewClient {
 
     @Override
     public void onLoadResource(final WebView view, final String url) {
+        Log.i(TAG, "URL: " + url);
         JavaScriptHelpers.videoView(view);
         if (activity.getSwipeView().isRefreshing())
             JavaScriptHelpers.loadCSS(view, activity.getCss().toString());
@@ -155,7 +156,7 @@ public class WebViewClient extends android.webkit.WebViewClient {
     public void onPageFinished(final WebView view, final String url) {
         activity.getSwipeView().setRefreshing(false);
 
-        switch (activity.getPreferences().getString("web_themes", "Material")) {
+        switch (activity.getPreferences().getString("web_themes", "FacebookMobile")) {
             case "FacebookMobile":
                 break;
             case "Material":
