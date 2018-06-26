@@ -46,18 +46,19 @@ import java.io.File
 
 class Photo : AppCompatActivity(), OnPhotoTapListener {
 
-    private var imageView: PhotoView? = null
-    private var downloadManager: DownloadManager? = null
-    private var progressBar: ProgressBar? = null
+    private lateinit var imageView: PhotoView
+    private lateinit var topGradient: View
+    private lateinit var toolbar: Toolbar
+    private lateinit var imageTitle: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var downloadManager: DownloadManager
+    private lateinit var webView: WebView
+
     private var shareTarget: Target<Bitmap>? = null
     private var download = false
     private var countdown = false
     private var share = 0
-    private var imageTitle: TextView? = null
-    private var topGradient: View? = null
-    private var toolbar: Toolbar? = null
     private var imageUrl: String? = null
-    private var webView: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +73,8 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
         downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         webView = WebView(this)
 
-        imageView!!.setOnPhotoTapListener(this)
-        imageTitle!!.text = intent.getStringExtra("title")
+        imageView.setOnPhotoTapListener(this)
+        imageTitle.text = intent.getStringExtra("title")
 
         setSupportActionBar(toolbar)
         if (supportActionBar != null) {
@@ -81,19 +82,18 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
             supportActionBar!!.setDisplayShowTitleEnabled(false)
         }
 
-        webView!!.settings.blockNetworkImage = true
-        webView!!.settings.setAppCacheEnabled(false)
-        webView!!.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-        webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webView!!.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
-        webView!!.loadUrl(intent.getStringExtra("link"))
-        webView!!.webViewClient = object : WebViewClient() {
+        webView.settings.blockNetworkImage = true
+        webView.settings.setAppCacheEnabled(false)
+        webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        webView.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        webView.loadUrl(intent.getStringExtra("link"))
+        webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 imageUrl = url
                 load()
             }
         }
-
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -124,13 +124,13 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
                     }
 
                     override fun onResourceReady(resource: Drawable, model: Any, target: Target<Drawable>, dataSource: DataSource, isFirstResource: Boolean): Boolean {
-                        progressBar!!.visibility = View.GONE
+                        progressBar.visibility = View.GONE
                         setCountDown()
                         return false
                     }
                 })
                 .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
-                .into(imageView!!)
+                .into(imageView)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -190,10 +190,10 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
                         val request = DownloadManager.Request(Uri.parse(imageUrl))
 
                         // Set the download directory
-                        val downloads_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/MaterialFBook")
-                        if (!downloads_dir.exists())
-                            downloads_dir.mkdir()
-                        val destinationFile = File(downloads_dir, Uri.parse(imageUrl).lastPathSegment)
+                        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/MaterialFBook")
+                        if (!downloadsDir.exists())
+                            downloadsDir.mkdir()
+                        val destinationFile = File(downloadsDir, Uri.parse(imageUrl).lastPathSegment)
                         request.setDestinationUri(Uri.fromFile(destinationFile))
 
                         // Make notification stay after download
@@ -201,7 +201,7 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
                         // Start the download
-                        downloadManager!!.enqueue(request)
+                        downloadManager.enqueue(request)
 
                         CookingAToast.cooking(this, getString(R.string.downloaded), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_download, false).show()
                         download = false
@@ -222,25 +222,24 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
         if (share != 2) {
             if (shareTarget != null)
                 Glide.with(this@Photo).clear(shareTarget)
-            if (imageView != null)
-                imageView!!.setImageDrawable(null)
+            imageView.setImageDrawable(null)
         }
-        webView!!.clearCache(true)
-        webView!!.clearHistory()
-        webView!!.removeAllViews()
-        webView!!.destroy()
+        webView.clearCache(true)
+        webView.clearHistory()
+        webView.removeAllViews()
+        webView.destroy()
     }
 
     fun setVisibility(visibility: Int, animation: Int) {
         val a = AnimationUtils.loadAnimation(this, animation)
 
-        topGradient!!.startAnimation(a)
-        toolbar!!.startAnimation(a)
-        imageTitle!!.startAnimation(a)
+        topGradient.startAnimation(a)
+        toolbar.startAnimation(a)
+        imageTitle.startAnimation(a)
 
-        topGradient!!.visibility = visibility
-        toolbar!!.visibility = visibility
-        imageTitle!!.visibility = visibility
+        topGradient.visibility = visibility
+        toolbar.visibility = visibility
+        imageTitle.visibility = visibility
     }
 
     private fun setCountDown() {
