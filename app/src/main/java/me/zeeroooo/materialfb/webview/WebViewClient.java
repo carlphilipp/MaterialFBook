@@ -137,7 +137,6 @@ public class WebViewClient extends android.webkit.WebViewClient {
 
     @Override
     public void onLoadResource(final WebView view, final String url) {
-        Log.i(TAG, "URL: " + url);
         JavaScriptHelpers.videoView(view);
         if (activity.getSwipeView().isRefreshing())
             JavaScriptHelpers.loadCSS(view, activity.getCss().toString());
