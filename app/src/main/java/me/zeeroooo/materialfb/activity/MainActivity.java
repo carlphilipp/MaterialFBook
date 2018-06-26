@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (badgeTask != null && badgeUpdateHandler != null)
             badgeUpdateHandler.removeCallbacks(badgeTask);
         if (preferences.getBoolean("clear_cache", false))
-            Utils.deleteCache(this);
+            Utils.INSTANCE.deleteCache(this);
     }
 
     @Override

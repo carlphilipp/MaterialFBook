@@ -33,3 +33,9 @@
 
 -keep,includedescriptorclasses class com.github.clans.fab.FloatingActionMenu { *; }
 -keep,includedescriptorclasses class me.zeeroooo.materialfb.webview.MFBWebView { *; }
+-keep,includedescriptorclasses class com.github.chrisbanes.photoview.PhotoView { *; }
+
+-dontnote kotlin.internal.PlatformImplementationsKt
+-dontnote kotlin.reflect.jvm.internal.ReflectionFactoryImpl
+-dontnote kotlin.internal.PlatformImplementationsKt
+-dontnote com.bumptech.glide.Glide
