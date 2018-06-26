@@ -15,7 +15,7 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/oopy_url_image"
+        android:id="@+id/copy_url_image"
         android:icon="@drawable/ic_copy_url"
         android:title="Copy URL"
         app:showAsAction="ifRoom"/>

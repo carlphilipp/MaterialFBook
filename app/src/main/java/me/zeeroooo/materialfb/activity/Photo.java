@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,9 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -33,10 +29,9 @@ import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -46,23 +41,23 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-
-import java.io.File;
-
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.PhotoView;
 import me.zeeroooo.materialfb.R;
 import me.zeeroooo.materialfb.ui.CookingAToast;
 
-public class Photo extends AppCompatActivity implements View.OnTouchListener {
+import java.io.File;
 
-    private ImageView imageView;
+public class Photo extends AppCompatActivity implements OnPhotoTapListener {
+
+    private PhotoView imageView;
     private DownloadManager downloadManager;
+    private ProgressBar progressBar;
     private Target<Bitmap> shareTarget;
     private boolean download = false, countdown = false;
-    private Matrix matrix = new Matrix(), savedMatrix = new Matrix();
-    private int NONE = 0, mode = NONE, share = 0;
-    private PointF start = new PointF(), mid = new PointF();
-    private float oldDist = 1f;
-    private View imageTitle, topGradient;
+    private int share = 0;
+    private TextView imageTitle;
+    private View topGradient;
     private Toolbar toolbar;
     private String imageUrl;
     private WebView webView;
@@ -70,23 +65,30 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_photo);
-        imageView = findViewById(R.id.container);
-        imageView.setOnTouchListener(this);
+
+        imageView = findViewById(R.id.photo);
         topGradient = findViewById(R.id.photoViewerTopGradient);
         toolbar = findViewById(R.id.toolbar_ph);
+        imageTitle = findViewById(R.id.photo_title);
+        progressBar = findViewById(android.R.id.progress);
+        downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        webView = new WebView(this);
+
+        imageView.setOnPhotoTapListener(this);
+        imageTitle.setText(getIntent().getStringExtra("title"));
+
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        webView = new WebView(this);
         webView.getSettings().setBlockNetworkImage(true);
         webView.getSettings().setAppCacheEnabled(false);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-
         webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         webView.loadUrl(getIntent().getStringExtra("link"));
         webView.setWebViewClient(new WebViewClient() {
@@ -97,9 +99,6 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
             }
         });
 
-        imageTitle = findViewById(R.id.photo_title);
-        ((TextView) imageTitle).setText(getIntent().getStringExtra("title"));
-        downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     @Override
@@ -119,60 +118,10 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
     }
 
     @Override
-    public boolean onTouch(final View v, final MotionEvent event) {
-        int DRAG = 1, ZOOM = 2;
+    public void onPhotoTap(final ImageView view, final float x, final float y) {
         setVisibility(View.VISIBLE, android.R.anim.fade_in);
         setCountDown();
-
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                savedMatrix.set(matrix);
-                start.set(event.getX(), event.getY());
-                mode = DRAG;
-                break;
-
-            case MotionEvent.ACTION_POINTER_UP:
-                mode = NONE;
-                break;
-
-            case MotionEvent.ACTION_POINTER_DOWN:
-
-                oldDist = spacing(event);
-                if (oldDist > 5f) {
-                    savedMatrix.set(matrix);
-                    mid.set(event.getX(0) + event.getX(1) / 2, event.getY(0) + event.getY(1) / 2);
-                    mode = ZOOM;
-                }
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-
-                if (mode == DRAG) {
-                    matrix.set(savedMatrix);
-                    matrix.postTranslate(event.getX() - start.x, event.getY() - start.y);
-                } else if (mode == ZOOM) {
-                    // pinch zooming
-                    float newDist = spacing(event), scale;
-                    if (newDist > 5f) {
-                        matrix.set(savedMatrix);
-                        scale = newDist / oldDist;
-                        matrix.postScale(scale, scale, mid.x, mid.y);
-                    }
-                }
-                break;
-        }
-
-        imageView.setImageMatrix(matrix);
-        v.performClick();
-
-        return true;
     }
-
-    private float spacing(final MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.sqrt(x * x + y * y);
-    } // https://stackoverflow.com/a/6650484 all the credits to Chirag Raval
 
     private void load() {
         Glide.with(this)
@@ -185,8 +134,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        imageView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                        findViewById(android.R.id.progress).setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
                         setCountDown();
                         return false;
                     }
@@ -204,30 +152,33 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.download_image) {
-            download = true;
-            RequestStoragePermission();
+        switch (id) {
+            case R.id.download_image:
+                download = true;
+                RequestStoragePermission();
+                break;
+            case R.id.share_image:
+                share = 1;
+                RequestStoragePermission();
+                break;
+            case R.id.copy_url_image:
+                final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
+                final ClipData clip = ClipData.newUri(this.getContentResolver(), "", Uri.parse(imageUrl));
+                if (clipboard != null)
+                    clipboard.setPrimaryClip(clip);
+                CookingAToast.cooking(Photo.this, getString(R.string.content_copy_link_done), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_copy_url, true).show();
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                break;
         }
-        if (id == R.id.share_image) {
-            share = 1;
-            RequestStoragePermission();
-        }
-        if (id == R.id.oopy_url_image) {
-            final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
-            final ClipData clip = ClipData.newUri(this.getContentResolver(), "", Uri.parse(imageUrl));
-            if (clipboard != null)
-                clipboard.setPrimaryClip(clip);
-            CookingAToast.cooking(Photo.this, getString(R.string.content_copy_link_done), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_copy_url, true).show();
-        }
-        if (id == android.R.id.home)
-            onBackPressed();
         return false;
     }
 
-    private void shareImg() {
+    private void shareImage() {
         shareTarget = new SimpleTarget<Bitmap>() {
             @Override
-            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+            public void onResourceReady(final Bitmap bitmap, Transition<? super Bitmap> transition) {
                 String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, Uri.parse(imageUrl).getLastPathSegment(), null);
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("image/*");
@@ -250,7 +201,7 @@ public class Photo extends AppCompatActivity implements View.OnTouchListener {
             case 1: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (share == 1)
-                        shareImg();
+                        shareImage();
                     else if (download) {
                         // Save the image
                         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
