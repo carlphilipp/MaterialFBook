@@ -16,9 +16,11 @@ import java.lang.ref.WeakReference
 import java.net.URL
 
 class UserInfoAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, Boolean>() {
+
     private val weakActivity = WeakReference(activity)
     private var name: String? = null
-    private var cover: String? = null
+
+    private var coverBitmap: Bitmap? = null
     private var profileBitmap: Bitmap? = null
 
     override fun doInBackground(params: Array<Void>): Boolean {
@@ -29,8 +31,12 @@ class UserInfoAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, Boolean>
                     .get()
                     .body()
             name = element.select("input[name=q]").attr("value")
-            cover = Helpers.decodeImg(element.toString().split("<img class=\"coverPhotoImg photo img\" src=\"".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].split("\"".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
-            val profileUrl = "https://graph.facebook.com/" + Helpers.getCookie() + "/picture?type=large"
+
+            val content = element.toString()
+            val coverUrl = extractUrl(content, "<img class=\"coverPhotoImg photo img\" src=\"".toRegex())
+            coverBitmap = BitmapFactory.decodeStream(URL(coverUrl).content as InputStream)
+
+            val profileUrl = extractUrl(content, "<img class=\"_11kf img\" alt=\"[a-zA-Z,:0-9 ]+\" src=\"".toRegex())
             profileBitmap = BitmapFactory.decodeStream(URL(profileUrl).content as InputStream)
             return true
         } catch (e: Exception) {
@@ -45,7 +51,7 @@ class UserInfoAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, Boolean>
             try {
                 activity.profileNameTv.text = name
                 Glide.with(activity)
-                        .load(cover)
+                        .load(coverBitmap)
                         .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                         .into(activity.coverIv)
                 Glide.with(activity)
@@ -56,6 +62,16 @@ class UserInfoAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, Boolean>
                 Log.e(TAG, e.message, e)
             }
         }
+    }
+
+    private fun extractUrl(content: String, regex: Regex): String {
+        return Helpers.decodeImg(
+                content.split(regex)
+                        .dropLastWhile { it.isEmpty() }
+                        .toTypedArray()[1]
+                        .split("\"".toRegex())
+                        .dropLastWhile { it.isEmpty() }
+                        .toTypedArray()[0])
     }
 
     companion object {
