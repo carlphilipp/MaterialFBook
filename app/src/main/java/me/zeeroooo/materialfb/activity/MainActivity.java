@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView mostRecentTv;
     private TextView friendsRegTv;
 
+    private TextView profileNameTv;
+    private ImageView coverIv;
+    private ImageView profilePictureIv;
+
     private String baseURL;
     private String cameraPhotoPath;
     private StringBuilder css = new StringBuilder();
@@ -94,6 +98,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.nav_view);
         mostRecentTv = (TextView) navigationView.getMenu().findItem(R.id.nav_most_recent).getActionView();
         friendsRegTv = (TextView) navigationView.getMenu().findItem(R.id.nav_friendreq).getActionView();
+
+        profileNameTv = navigationView.getHeaderView(0).findViewById(R.id.profile_name);
+        coverIv = navigationView.getHeaderView(0).findViewById(R.id.cover);
+        profilePictureIv = navigationView.getHeaderView(0).findViewById(R.id.profile_picture);
+
         downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 
         setupColor();
@@ -353,6 +362,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public MFBWebView getWebView() {
         return webView;
+    }
+
+    public TextView getProfileNameTv() {
+        return profileNameTv;
+    }
+
+    public ImageView getCoverIv() {
+        return coverIv;
+    }
+
+    public ImageView getProfilePictureIv() {
+        return profilePictureIv;
     }
 
     private void setupNavigationView() {

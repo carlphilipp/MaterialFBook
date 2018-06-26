@@ -11,8 +11,7 @@ object Utils {
             val dir = context.cacheDir
             if (dir != null && dir.isDirectory)
                 deleteDir(dir)
-        } catch (e: Exception) {
-            //
+        } catch (ignored: Exception) {
         }
 
     }

@@ -61,7 +61,7 @@ public class Helpers {
                 .replace("%20", " ");
     }
 
-    public static String decodeImg(String img_url) {
-        return img_url.replace("\\3a ", ":").replace("efg\\3d ", "oh=").replace("\\3d ", "=").replace("\\26 ", "&").replace("\\", "").replace("&amp;", "&");
+    public static String decodeImg(final String imgUrl) {
+        return imgUrl.replace("\\3a ", ":").replace("efg\\3d ", "oh=").replace("\\3d ", "=").replace("\\26 ", "&").replace("\\", "").replace("&amp;", "&");
     }
 }
