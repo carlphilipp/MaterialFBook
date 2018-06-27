@@ -407,18 +407,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupWebView() {
-        webView.setOnScrollChangedCallback((view, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            // Make sure the hiding is enabled and the scroll was significant
-            if (Math.abs(oldScrollY - scrollY) > getApplication().getResources().getDimensionPixelOffset(R.dimen.fab_scroll_threshold)) {
-                if (scrollY > oldScrollY) {
-                    // User scrolled down, hide the button
-                    floatingActionMenu.hideMenuButton(true);
-                } else if (scrollY < oldScrollY) {
-                    // User scrolled up, show the button
-                    floatingActionMenu.showMenuButton(true);
-                }
-            }
-        });
+        webView.setUpOnScrollChanged(floatingActionMenu, getApplication().getResources().getDimensionPixelOffset(R.dimen.fab_scroll_threshold));
 
         webView.updateSettings(preferences);
         webView.addJavascriptInterface(new JavaScriptInterfaces(this), "android");
