@@ -42,11 +42,9 @@ class More : AppCompatActivity() {
                 "changelog" -> {
                     val changelog = AlertDialog.Builder(context!!)
                     changelog.setTitle(resources.getString(R.string.changelog))
-                    changelog.setMessage(Html.fromHtml(resources.getString(R.string.changelog_list)))
+                    changelog.setMessage(Html.fromHtml(resources.getString(R.string.changelog_list), Html.FROM_HTML_MODE_LEGACY))
                     changelog.setCancelable(false)
-                    changelog.setPositiveButton("Ok!") { _, _ ->
-                        // Nothing here :p
-                    }
+                    changelog.setPositiveButton("Ok!") { _, _ -> }
                     changelog.show()
                     return true
                 }

@@ -13,11 +13,11 @@ final class Util {
         return Math.round(dp * scale);
     }
 
-    static boolean hasJellyBean() {
+/*    static boolean hasJellyBean() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 
     static boolean hasLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
+    }*/
 }

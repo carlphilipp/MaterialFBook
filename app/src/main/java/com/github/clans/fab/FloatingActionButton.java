@@ -232,22 +232,16 @@ public class FloatingActionButton extends AppCompatImageButton {
         drawable.addState(new int[]{android.R.attr.state_pressed}, createCircleDrawable(mColorPressed));
         drawable.addState(new int[]{}, createCircleDrawable(mColorNormal));
 
-        if (Util.hasLollipop()) {
-            RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
-                    new int[]{mColorRipple}), drawable, null);
-            setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
-                }
-            });
-            setClipToOutline(true);
-            mBackgroundDrawable = ripple;
-            return ripple;
-        }
-
-        mBackgroundDrawable = drawable;
-        return drawable;
+        RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}}, new int[]{mColorRipple}), drawable, null);
+        setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setOval(0, 0, view.getWidth(), view.getHeight());
+            }
+        });
+        setClipToOutline(true);
+        mBackgroundDrawable = ripple;
+        return ripple;
     }
 
     private Drawable createCircleDrawable(int color) {
@@ -256,14 +250,8 @@ public class FloatingActionButton extends AppCompatImageButton {
         return shapeDrawable;
     }
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setBackgroundCompat(Drawable drawable) {
-        if (Util.hasJellyBean()) {
-            setBackground(drawable);
-        } else {
-            setBackgroundDrawable(drawable);
-        }
+        setBackground(drawable);
     }
 
     private void saveButtonOriginalPosition() {
@@ -304,12 +292,11 @@ public class FloatingActionButton extends AppCompatImageButton {
         mColorRipple = colorRipple;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void onActionDown() {
         if (mBackgroundDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mBackgroundDrawable;
             drawable.setState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed});
-        } else if (Util.hasLollipop()) {
+        } else {
             RippleDrawable ripple = (RippleDrawable) mBackgroundDrawable;
             ripple.setState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed});
             ripple.setHotspot(calculateCenterX(), calculateCenterY());
@@ -317,12 +304,11 @@ public class FloatingActionButton extends AppCompatImageButton {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void onActionUp() {
         if (mBackgroundDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mBackgroundDrawable;
             drawable.setState(new int[]{android.R.attr.state_enabled});
-        } else if (Util.hasLollipop()) {
+        } else {
             RippleDrawable ripple = (RippleDrawable) mBackgroundDrawable;
             ripple.setState(new int[]{android.R.attr.state_enabled});
             ripple.setHotspot(calculateCenterX(), calculateCenterY());
@@ -558,7 +544,7 @@ public class FloatingActionButton extends AppCompatImageButton {
 
     @Override
     public void setElevation(float elevation) {
-        if (Util.hasLollipop() && elevation > 0) {
+        if (elevation > 0) {
             super.setElevation(elevation);
             if (!isInEditMode()) {
                 mUsingElevation = true;
@@ -570,7 +556,7 @@ public class FloatingActionButton extends AppCompatImageButton {
 
     /**
      * Sets the shadow color and radius to mimic the native elevation.
-     *
+     * <p>
      * <p><b>API 21+</b>: Sets the native elevation of this view, in pixels. Updates margins to
      * make the view hold its position in layout across different platform versions.</p>
      */
@@ -581,19 +567,14 @@ public class FloatingActionButton extends AppCompatImageButton {
         mShadowXOffset = 0;
         mShadowYOffset = Math.round(mFabSize == SIZE_NORMAL ? elevation : elevation / 2);
 
-        if (Util.hasLollipop()) {
-            super.setElevation(elevation);
-            mUsingElevationCompat = true;
-            mShowShadow = false;
-            updateBackground();
+        super.setElevation(elevation);
+        mUsingElevationCompat = true;
+        mShowShadow = false;
+        updateBackground();
 
-            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            if (layoutParams != null) {
-                setLayoutParams(layoutParams);
-            }
-        } else {
-            mShowShadow = true;
-            updateBackground();
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        if (layoutParams != null) {
+            setLayoutParams(layoutParams);
         }
     }
 }
