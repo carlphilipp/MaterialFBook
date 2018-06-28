@@ -9,7 +9,7 @@
             android:defaultValue="Most_recent"
             android:entries="@array/Start"
             android:entryValues="@array/StartValues"
-            android:key="start_url"
+            android:key="@string/pref_start_url"
             android:summary="%s."
             android:title="@string/start_url" />
         <SwitchPreference

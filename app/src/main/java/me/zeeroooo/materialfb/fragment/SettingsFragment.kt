@@ -28,13 +28,14 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     private lateinit var preferences: SharedPreferences
     private lateinit var scheduler: Scheduler
 
-    private val prefSaveData by lazy { currentContext.getString(R.string.pref_save_data) }
-    private val prefNotifSettings by lazy { currentContext.getString(R.string.pref_notifications_settings) }
-    private val prefNavMenuSettings by lazy { currentContext.getString(R.string.pref_navigation_menu_settings) }
-    private val prefMoreAndCredits by lazy { currentContext.getString(R.string.pref_more_and_credits) }
-    private val prefLocationEnabled by lazy { currentContext.getString(R.string.pref_location_enabled) }
-    private val prefNotif by lazy { currentContext.getString(R.string.pref_notif) }
-    private val prefLocaleSwitcher by lazy { currentContext.getString(R.string.pref_locale_switcher) }
+    private val prefNotifInterval by lazy { getString(R.string.pref_notif_interval) }
+    private val prefSaveData by lazy { getString(R.string.pref_save_data) }
+    private val prefNotifSettings by lazy { getString(R.string.pref_notifications_settings) }
+    private val prefNavMenuSettings by lazy { getString(R.string.pref_navigation_menu_settings) }
+    private val prefMoreAndCredits by lazy { getString(R.string.pref_more_and_credits) }
+    private val prefLocationEnabled by lazy { getString(R.string.pref_location_enabled) }
+    private val prefNotif by lazy { getString(R.string.pref_notif) }
+    private val prefLocaleSwitcher by lazy { getString(R.string.pref_locale_switcher) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -101,8 +102,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     private fun setScheduler() {
-        if (preferences.getBoolean("notif", false) && !preferences.getBoolean(prefSaveData, false)) {
-            scheduler.schedule(preferences.getInt(currentContext.getString(R.string.pref_notif_interval), 60000), true)
+        if (preferences.getBoolean(prefNotif, false) && !preferences.getBoolean(prefSaveData, false)) {
+            scheduler.schedule(preferences.getInt(prefNotifInterval, 60000), true)
         } else {
             scheduler.cancel()
         }

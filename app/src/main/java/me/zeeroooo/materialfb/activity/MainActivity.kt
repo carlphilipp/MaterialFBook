@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         private set
     private var badgeUpdateHandler: Handler? = null
     private var badgeTask: Runnable? = null
-    private val saveData by lazy { applicationContext.getString(R.string.pref_save_data) }
+    private val saveData by lazy { getString(R.string.pref_save_data) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -369,7 +369,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun loadWebViewUrl() {
-        when (preferences.getString("start_url", "Most_recent")) {
+        when (preferences.getString(getString(R.string.pref_start_url), "Most_recent")) {
             "Most_recent" -> webView.loadUrl("$baseURL/home.php?sk=h_chr")
             "Top_stories" -> webView.loadUrl("$baseURL/home.php?sk=h_nor")
             "Messages" -> webView.loadUrl("$baseURL/messages/")

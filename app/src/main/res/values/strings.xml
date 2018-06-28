@@ -183,4 +183,5 @@
     <string name="pref_location_enabled">location_enabled</string>
     <string name="pref_notif">notif</string>
     <string name="pref_locale_switcher">locale_switcher</string>
+    <string name="pref_start_url">start_url</string>
 </resources>
