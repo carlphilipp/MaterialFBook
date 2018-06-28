@@ -193,7 +193,7 @@ public class NotificationsJIS extends JobIntentService {
     private void notifier(@Nullable final String content, final String title, final String url, final String image_url, int id) {
 
         try {
-            picprofile = Glide.with(this).asBitmap().load(Helpers.decodeImg(image_url)).apply(RequestOptions.circleCropTransform()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+            picprofile = Glide.with(this).asBitmap().load(Helpers.INSTANCE.decodeImg(image_url)).apply(RequestOptions.circleCropTransform()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
         } catch (Exception e) {
             e.getStackTrace();
         }

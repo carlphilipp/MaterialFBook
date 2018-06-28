@@ -160,10 +160,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         webView.onResume();
         webView.resumeTimers();
 
-        if (Helpers.getCookie() != null && !preferences.getBoolean("save_data", false)) {
+        if (Helpers.INSTANCE.getCookie() != null && !preferences.getBoolean("save_data", false)) {
             badgeUpdateHandler = new Handler();
             badgeTask = () -> {
-                JavaScriptHelpers.updateNumsService(webView);
+                JavaScriptHelpers.INSTANCE.updateNumsService(webView);
                 badgeUpdateHandler.postDelayed(badgeTask, 15000);
             };
             badgeTask.run();
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 webView.loadUrl(baseURL + "home.php?sk=h_chr'");
                 setTitle(R.string.menu_most_recent);
                 item.setChecked(true);
-                Helpers.uncheckRadioMenu(navigationView.getMenu());
+                Helpers.INSTANCE.uncheckRadioMenu(navigationView.getMenu());
                 break;
             case R.id.nav_friendreq:
                 webView.setVisibility(View.INVISIBLE);
