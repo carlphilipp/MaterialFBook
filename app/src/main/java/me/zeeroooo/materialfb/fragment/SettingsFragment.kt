@@ -18,6 +18,8 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.activity.More
+import me.zeeroooo.materialfb.misc.Constant.Preference.NOTIF_INTERVAL
+import me.zeeroooo.materialfb.misc.Constant.Preference.SAVE_DATA
 import me.zeeroooo.materialfb.notification.Scheduler
 import me.zeeroooo.materialfb.ui.CookingAToast
 import java.util.Locale
@@ -42,7 +44,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         findPreference("navigation_menu_settings").onPreferenceClickListener = this
         findPreference("moreandcredits").onPreferenceClickListener = this
         findPreference("location_enabled").onPreferenceClickListener = this
-        findPreference("save_data").onPreferenceClickListener = this
+        findPreference(SAVE_DATA).onPreferenceClickListener = this
         findPreference("notif").onPreferenceClickListener = this
         findPreference("localeSwitcher").setOnPreferenceChangeListener { _, o ->
             val locale = Locale(o.toString())
@@ -73,7 +75,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
                 return true
             }
-            "save_data" -> {
+            SAVE_DATA -> {
                 setScheduler()
                 return true
             }
@@ -93,8 +95,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     private fun setScheduler() {
-        if (preferences.getBoolean("notif", false) && !preferences.getBoolean("save_data", false)) {
-            scheduler.schedule(Integer.parseInt(preferences.getString("notif_interval", "60000")), true)
+        if (preferences.getBoolean("notif", false) && !preferences.getBoolean(SAVE_DATA, false)) {
+            scheduler.schedule(preferences.getInt(NOTIF_INTERVAL, 60000), true)
         } else {
             scheduler.cancel()
         }

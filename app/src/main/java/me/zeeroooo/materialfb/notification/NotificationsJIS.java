@@ -42,6 +42,8 @@ import me.zeeroooo.materialfb.R;
 import me.zeeroooo.materialfb.ui.Theme;
 import me.zeeroooo.materialfb.webview.Helpers;
 
+import static me.zeeroooo.materialfb.misc.Constant.Preference.JOB_URL;
+
 public class NotificationsJIS extends JobIntentService {
     private SharedPreferences mPreferences;
     private boolean msg_notAWhiteList = false, notif_notAWhiteList = false;
@@ -259,7 +261,7 @@ public class NotificationsJIS extends JobIntentService {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("Job_url", url);
+        intent.putExtra(JOB_URL, url);
         mBuilder.setOngoing(false);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);

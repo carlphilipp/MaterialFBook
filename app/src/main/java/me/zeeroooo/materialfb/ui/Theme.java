@@ -20,8 +20,8 @@ public final class Theme {
         return outValue.data;
     }
 
-    public static void Temas(Context ctxt, SharedPreferences mPreferences) {
-        switch (mPreferences.getString("app_theme", "MaterialFBook")) {
+    public static void Temas(Context ctxt, SharedPreferences preferences) {
+        switch (preferences.getString("app_theme", "MaterialFBook")) {
             case "MaterialFBook":
                 ctxt.setTheme(R.style.MFB);
                 break;

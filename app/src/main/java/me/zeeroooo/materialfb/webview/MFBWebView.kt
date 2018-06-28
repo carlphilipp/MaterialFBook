@@ -14,7 +14,7 @@ import com.github.clans.fab.FloatingActionMenu
 
 class MFBWebView : WebView, NestedScrollingChild {
 
-    private lateinit var mChildHelper: NestedScrollingChildHelper
+    private lateinit var childHelper: NestedScrollingChildHelper
     private lateinit var floatingActionMenu: FloatingActionMenu
     private var scrollThreshold: Int = 0
 
@@ -36,13 +36,13 @@ class MFBWebView : WebView, NestedScrollingChild {
     }
 
     private fun init() {
-        mChildHelper = NestedScrollingChildHelper(this)
+        childHelper = NestedScrollingChildHelper(this)
         isNestedScrollingEnabled = true
     }
 
     fun updateSettings(preferences: SharedPreferences) {
         settings.setGeolocationEnabled(preferences.getBoolean("location_enabled", false))
-        settings.minimumFontSize = Integer.parseInt(preferences.getString("textScale", "1"))
+        settings.minimumFontSize = preferences.getString("textScale", "1").toInt()
         settings.blockNetworkImage = preferences.getBoolean("stop_images", false)
         settings.setAppCacheEnabled(true)
         settings.useWideViewPort = true
@@ -60,10 +60,10 @@ class MFBWebView : WebView, NestedScrollingChild {
         if (Math.abs(oldScrollY - scrollY) > scrollThreshold) {
             if (scrollY > oldScrollY) {
                 // User scrolled down, hide the button
-                floatingActionMenu.hideMenuButton(true);
+                floatingActionMenu.hideMenuButton(true)
             } else if (scrollY < oldScrollY) {
                 // User scrolled up, show the button
-                floatingActionMenu.showMenuButton(true);
+                floatingActionMenu.showMenuButton(true)
             }
         }
     }
@@ -74,39 +74,39 @@ class MFBWebView : WebView, NestedScrollingChild {
     }
 
     override fun setNestedScrollingEnabled(enabled: Boolean) {
-        mChildHelper.isNestedScrollingEnabled = enabled
+        childHelper.isNestedScrollingEnabled = enabled
     }
 
     override fun isNestedScrollingEnabled(): Boolean {
-        return mChildHelper.isNestedScrollingEnabled
+        return childHelper.isNestedScrollingEnabled
     }
 
     override fun startNestedScroll(axes: Int): Boolean {
-        return mChildHelper.startNestedScroll(axes)
+        return childHelper.startNestedScroll(axes)
     }
 
     override fun stopNestedScroll() {
-        mChildHelper.stopNestedScroll()
+        childHelper.stopNestedScroll()
     }
 
     override fun hasNestedScrollingParent(): Boolean {
-        return mChildHelper.hasNestedScrollingParent()
+        return childHelper.hasNestedScrollingParent()
     }
 
     override fun dispatchNestedScroll(dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, offsetInWindow: IntArray?): Boolean {
-        return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
+        return childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
     }
 
     override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?): Boolean {
-        return mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
+        return childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
     }
 
     override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
-        return mChildHelper.dispatchNestedFling(velocityX, velocityY, consumed)
+        return childHelper.dispatchNestedFling(velocityX, velocityY, consumed)
     }
 
     override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float): Boolean {
-        return mChildHelper.dispatchNestedPreFling(velocityX, velocityY)
+        return childHelper.dispatchNestedPreFling(velocityX, velocityY)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

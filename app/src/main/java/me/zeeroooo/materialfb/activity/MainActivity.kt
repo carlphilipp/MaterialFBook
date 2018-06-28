@@ -36,6 +36,16 @@ import android.widget.TextView
 import com.github.clans.fab.FloatingActionMenu
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.listener.FabOnClickListener
+import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
+import me.zeeroooo.materialfb.misc.Constant.Preference.APPLY
+import me.zeeroooo.materialfb.misc.Constant.Preference.JOB_URL
+import me.zeeroooo.materialfb.misc.Constant.Preference.SAVE_DATA
+import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.DESKTOP_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.MBASIC_FULL_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.MOBILE_FULL_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.MOBILE_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.WEB_URL
 import me.zeeroooo.materialfb.misc.UserInfoAsyncTask
 import me.zeeroooo.materialfb.misc.Utils
 import me.zeeroooo.materialfb.ui.CookingAToast
@@ -143,7 +153,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNewIntent(intent: Intent) {
         setIntent(intent)
-        if (intent.getBooleanExtra("apply", false)) {
+        if (intent.getBooleanExtra(APPLY, false)) {
             finish()
             val apply = Intent(this, MainActivity::class.java)
             startActivity(apply)
@@ -156,7 +166,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         webView.onResume()
         webView.resumeTimers()
 
-        if (Helpers.cookie != null && !preferences.getBoolean("save_data", false)) {
+        if (Helpers.cookie != null && !preferences.getBoolean(SAVE_DATA, false)) {
             badgeUpdateHandler = Handler()
             badgeTask = Runnable {
                 JavaScriptHelpers.updateNumsService(webView)
@@ -208,7 +218,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        filePathCallback!!.onReceiveValue(results)
+        filePathCallback?.onReceiveValue(results)
         filePathCallback = null
     }
 
@@ -228,14 +238,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_top_stories -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl(baseURL + "home.php?sk=h_nor")
+                webView.loadUrl("$baseURL/home.php?sk=h_nor")
                 setTitle(R.string.menu_top_stories)
                 item.isChecked = true
             }
             R.id.nav_most_recent -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl(baseURL + "home.php?sk=h_chr'")
+                webView.loadUrl("$baseURL/home.php?sk=h_chr'")
                 setTitle(R.string.menu_most_recent)
                 item.isChecked = true
                 Helpers.uncheckRadioMenu(navigationView.menu)
@@ -243,38 +253,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_friendreq -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl(baseURL + "friends/center/requests/")
+                webView.loadUrl("$baseURL/friends/center/requests/")
                 setTitle(R.string.menu_friendreq)
                 item.isChecked = true
             }
             R.id.nav_groups -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl(baseURL + "groups/?category=membership")
+                webView.loadUrl("$baseURL/groups/?category=membership")
                 css.append("._129- {position:initial}")
                 item.isChecked = true
             }
             R.id.nav_mainmenu -> {
                 webView.visibility = View.INVISIBLE
 
-                if (!preferences.getBoolean("save_data", false))
+                if (!preferences.getBoolean(SAVE_DATA, false))
                     webView.loadUrl("javascript:(function()%7Btry%7Bdocument.querySelector('%23bookmarks_jewel%20%3E%20a').click()%7Dcatch(_)%7Bwindow.location.href%3D'" + "https%3A%2F%2Fm.facebook.com%2F" + "home.php'%7D%7D)()")
                 else
-                    webView.loadUrl("https://mbasic.facebook.com/menu/bookmarks/?ref_component=mbasic_home_header&ref_page=%2Fwap%2Fhome.php&refid=8")
+                    webView.loadUrl("$MBASIC_FULL_URL/menu/bookmarks/?ref_component=mbasic_home_header&ref_page=%2Fwap%2Fhome.php&refid=8")
                 setTitle(R.string.menu_mainmenu)
                 item.isChecked = true
             }
             R.id.nav_events -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl(baseURL + "events/")
+                webView.loadUrl("$baseURL/events/")
                 css.append("#page{top:0}")
                 item.isChecked = true
             }
             R.id.nav_photos -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl(baseURL + "photos/")
+                webView.loadUrl("$baseURL/photos/")
             }
             R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
             R.id.nav_back -> if (webView.canGoBack())
@@ -290,7 +300,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @JavascriptInterface
     fun LoadVideo(video_url: String) {
         val video = Intent(this, Video::class.java)
-        video.putExtra("video_url", video_url)
+        video.putExtra(VIDEO_URL, video_url)
         startActivity(video)
     }
 
@@ -360,9 +370,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun loadWebViewUrl() {
         when (preferences.getString("start_url", "Most_recent")) {
-            "Most_recent" -> webView.loadUrl(baseURL + "home.php?sk=h_chr")
-            "Top_stories" -> webView.loadUrl(baseURL + "home.php?sk=h_nor")
-            "Messages" -> webView.loadUrl(baseURL + "messages/")
+            "Most_recent" -> webView.loadUrl("$baseURL/home.php?sk=h_chr")
+            "Top_stories" -> webView.loadUrl("$baseURL/home.php?sk=h_nor")
+            "Messages" -> webView.loadUrl("$baseURL/messages/")
             else -> {
             }
         }
@@ -374,7 +384,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         profileImage.isClickable = true
         profileImage.setOnClickListener { _ ->
             drawer.closeDrawers()
-            webView.loadUrl(baseURL + "me")
+            webView.loadUrl("$baseURL/me")
         }
     }
 
@@ -387,26 +397,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setupBaseUrl() {
-        baseURL = if (!preferences.getBoolean("save_data", false))
-            "https://m.facebook.com/"
+        baseURL = if (!preferences.getBoolean(SAVE_DATA, false))
+            MOBILE_FULL_URL
         else
-            "https://mbasic.facebook.com/"
+            MBASIC_FULL_URL
     }
 
     private fun urlIntent(intent: Intent) {
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             if (URLUtil.isValidUrl(intent.getStringExtra(Intent.EXTRA_TEXT))) {
                 try {
-                    webView.loadUrl("https://mbasic.facebook.com/composer/?text=" + URLEncoder.encode(intent.getStringExtra(Intent.EXTRA_TEXT), "utf-8"))
+                    webView.loadUrl("$MBASIC_FULL_URL/composer/?text=" + URLEncoder.encode(intent.getStringExtra(Intent.EXTRA_TEXT), "utf-8"))
                 } catch (uee: UnsupportedEncodingException) {
                     Log.e(TAG, uee.message, uee)
                 }
-
             }
         }
 
         if (intent.extras != null)
-            urlIntent = intent.extras!!.getString("Job_url")
+            urlIntent = intent.extras!!.getString(JOB_URL)
 
         if (intent.dataString != null) {
             urlIntent = getIntent().dataString
@@ -418,17 +427,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (intent.type!!.startsWith("image/") || intent.type!!.startsWith("video/") || intent.type!!.startsWith("audio/")) {
                 sharedFromGallery = intent.getParcelableExtra(Intent.EXTRA_STREAM)
                 css.append("#mbasic_inline_feed_composer{display:initial}")
-                webView.loadUrl("https://m.facebook.com")
+                webView.loadUrl(MOBILE_FULL_URL)
             }
         }
 
         val newUrl = urlIntent
         val moreNewUrl: String
-        if (newUrl != null && newUrl.contains("www.facebook.com")) {
-            moreNewUrl = newUrl.replace("www.facebook.com", "m.facebook.com")
+        if (newUrl != null && newUrl.contains(DESKTOP_URL)) {
+            moreNewUrl = newUrl.replace(DESKTOP_URL, MOBILE_URL)
             webView.loadUrl(moreNewUrl)
-        } else if (newUrl != null && newUrl.contains("web.facebook.com")) {
-            moreNewUrl = newUrl.replace("web.facebook.com", "m.facebook.com")
+        } else if (newUrl != null && newUrl.contains(WEB_URL)) {
+            moreNewUrl = newUrl.replace(WEB_URL, MOBILE_URL)
             webView.loadUrl(moreNewUrl)
         } else {
             webView.loadUrl(urlIntent)
@@ -437,6 +446,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
-        const val INPUT_FILE_REQUEST_CODE = 1
     }
 }

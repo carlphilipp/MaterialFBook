@@ -15,6 +15,10 @@ import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.activity.MainActivity
 import me.zeeroooo.materialfb.activity.Photo
 import me.zeeroooo.materialfb.activity.Video
+import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.DOMAIN
+import me.zeeroooo.materialfb.misc.Constant.Url.MBASIC_FULL_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.MOBILE_FULL_URL
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.IOException
@@ -43,9 +47,9 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
         }
 
         if (url.contains("video-ort2-1.xx.fbcdn.net") || url.contains("video.ford4-1.fna.fbcdn.net")) {
-            val Video = Intent(activity, Video::class.java)
-            Video.putExtra("video_url", url)
-            activity.startActivity(Video)
+            val video = Intent(activity, Video::class.java)
+            video.putExtra(VIDEO_URL, url)
+            activity.startActivity(video)
             return true
         }
 
@@ -120,7 +124,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         activity.swipeView.isRefreshing = true
-        if (url.contains("https://mbasic.facebook.com/home.php?s="))
+        if (url.contains("$MBASIC_FULL_URL/home.php?s="))
             view.loadUrl(activity.baseURL)
     }
 
@@ -128,7 +132,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
         JavaScriptHelpers.videoView(view)
         if (activity.swipeView.isRefreshing)
             JavaScriptHelpers.loadCSS(view, activity.css.toString())
-        if (url.contains("facebook.com/composer/mbasic/") || url.contains("https://m.facebook.com/sharer.php?sid="))
+        if (url.contains("$DOMAIN/composer/mbasic/") || url.contains("$MOBILE_FULL_URL/sharer.php?sid="))
             activity.css.append("#page{top:0}")
 
         // Do not start Photo activity anymore when clicking on a photo in news feed
@@ -161,8 +165,6 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
             "MaterialLightBlue" -> activity.css.append(activity.getString(R.string.MaterialLightBlue))
             "MaterialOrange" -> activity.css.append(activity.getString(R.string.MaterialOrange))
             "MaterialGooglePlayGreen" -> activity.css.append(activity.getString(R.string.MaterialGPG))
-            else -> {
-            }
         }
 
         if (url.contains("lookaside") || url.contains("cdn.fbsbx.com")) {
@@ -176,7 +178,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
         else
             activity.floatingActionMenu.visibility = View.VISIBLE
 
-        if (url.contains("https://mbasic.facebook.com/composer/?text=")) {
+        if (url.contains("$MBASIC_FULL_URL/composer/?text=")) {
             val sanitizer = UrlQuerySanitizer()
             sanitizer.allowUnregisteredParamaters = true
             sanitizer.parseUrl(url)
@@ -184,7 +186,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
             view.loadUrl("javascript:(function(){document.querySelector('#composerInput').innerHTML='$param'})()")
         }
 
-        if (url.contains("https://m.facebook.com/public/")) {
+        if (url.contains("$MOBILE_FULL_URL/public/")) {
             val user = url.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val profile = user[user.size - 1]
             view.loadUrl("javascript:(function(){document.querySelector('input#u_0_0._5whq.input').value='$profile'})()")

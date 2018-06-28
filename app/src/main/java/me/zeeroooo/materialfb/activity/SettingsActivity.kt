@@ -15,6 +15,7 @@ import android.view.MenuItem
 import me.zeeroooo.materialfb.fragment.SettingsFragment
 import me.zeeroooo.materialfb.ui.Theme
 import me.zeeroooo.materialfb.R
+import me.zeeroooo.materialfb.misc.Constant.Preference.APPLY
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -37,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
         val count = supportFragmentManager.backStackEntryCount
         if (count == 0) {
             val apply = Intent(this, MainActivity::class.java)
-            apply.putExtra("apply", true)
+            apply.putExtra(APPLY, true)
             startActivity(apply)
             finish()
         } else

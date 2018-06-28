@@ -41,6 +41,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.github.chrisbanes.photoview.OnPhotoTapListener
 import com.github.chrisbanes.photoview.PhotoView
 import me.zeeroooo.materialfb.R
+import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
 import me.zeeroooo.materialfb.ui.CookingAToast
 import java.io.File
 
@@ -181,7 +182,7 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            1 -> {
+            INPUT_FILE_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (share == 1)
                         shareImage()

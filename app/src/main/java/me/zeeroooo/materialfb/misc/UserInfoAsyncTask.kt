@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import me.zeeroooo.materialfb.activity.MainActivity
+import me.zeeroooo.materialfb.misc.Constant.Url.DESKTOP_ME_FULL_URL
+import me.zeeroooo.materialfb.misc.Constant.Url.MOBILE_FULL_URL
 import me.zeeroooo.materialfb.webview.Helpers
 import org.jsoup.Jsoup
 import java.io.InputStream
@@ -19,14 +21,13 @@ class UserInfoAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, Boolean>
 
     private val weakActivity = WeakReference(activity)
     private var name: String? = null
-
     private var coverBitmap: Bitmap? = null
     private var profileBitmap: Bitmap? = null
 
     override fun doInBackground(params: Array<Void>): Boolean {
         try {
-            val element = Jsoup.connect("https://www.facebook.com/me")
-                    .cookie("https://m.facebook.com", CookieManager.getInstance().getCookie("https://m.facebook.com"))
+            val element = Jsoup.connect(DESKTOP_ME_FULL_URL)
+                    .cookie(MOBILE_FULL_URL, CookieManager.getInstance().getCookie(MOBILE_FULL_URL))
                     .timeout(300000)
                     .get()
                     .body()

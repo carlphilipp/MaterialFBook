@@ -22,6 +22,7 @@ import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import me.zeeroooo.materialfb.R
+import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
 import me.zeeroooo.materialfb.ui.CookingAToast
 import me.zeeroooo.materialfb.webview.VideoViewTouchable
 import java.io.File
@@ -44,7 +45,7 @@ class Video : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
 
-        url = intent.getStringExtra("video_url")
+        url = intent.getStringExtra(VIDEO_URL)
 
         videoView = findViewById(R.id.video_view)
         buttonsHeader = findViewById(R.id.buttons_header)

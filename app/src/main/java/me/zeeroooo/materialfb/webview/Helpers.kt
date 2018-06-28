@@ -2,6 +2,7 @@ package me.zeeroooo.materialfb.webview
 
 import android.view.Menu
 import android.webkit.CookieManager
+import me.zeeroooo.materialfb.misc.Constant.Url.MOBILE_FULL_URL
 
 object Helpers {
 
@@ -10,7 +11,7 @@ object Helpers {
     val cookie: String?
         get() {
             val cookieManager = CookieManager.getInstance()
-            val cookies = cookieManager.getCookie("https://m.facebook.com/")
+            val cookies = cookieManager.getCookie("$MOBILE_FULL_URL/")
             if (cookies != null) {
                 val temp = cookies.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 for (ar1 in temp) {

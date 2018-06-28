@@ -13,6 +13,7 @@ import java.io.IOException
 
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.activity.MainActivity
+import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
 
 class WebChromeClient(private val activity: MainActivity) : android.webkit.WebChromeClient() {
 
@@ -57,7 +58,7 @@ class WebChromeClient(private val activity: MainActivity) : android.webkit.WebCh
             chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent)
             chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser")
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray)
-            activity.startActivityForResult(chooserIntent, MainActivity.INPUT_FILE_REQUEST_CODE)
+            activity.startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE)
         }
         return true
     }
