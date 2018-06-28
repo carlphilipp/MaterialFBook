@@ -69,10 +69,15 @@ class Video : AppCompatActivity() {
                 videoView.start()
             }
         }
+        videoView.setOnTouchListener { _, _ ->
+            setCountDown()
+            setButtonsHeaderVisibility(View.VISIBLE, android.R.anim.fade_in)
+            false
+        }
 
         // Buttons
         val pause = findViewById<ImageButton>(R.id.pauseplay_btn)
-        setBackground(pause)
+        setButtonBackground(pause)
         pause.setOnClickListener { view ->
             val imageButton = view as ImageButton
             if (videoView.isPlaying) {
@@ -85,24 +90,18 @@ class Video : AppCompatActivity() {
         }
 
         val previous = findViewById<ImageButton>(R.id.previous_btn)
-        setBackground(previous)
+        setButtonBackground(previous)
         previous.setOnClickListener { _ ->
             videoView.seekTo(0)
             seekBar.progress = 0
         }
 
         val download = findViewById<ImageButton>(R.id.download_btn)
-        setBackground(download)
+        setButtonBackground(download)
         download.setOnClickListener { requestStoragePermission() }
 
-        videoView.setOnTouchListener { _, _ ->
-            setCountDown()
-            setButtonsHeaderVisibility(View.VISIBLE, android.R.anim.fade_in)
-            false
-        }
-
         val share = findViewById<ImageButton>(R.id.share_btn)
-        setBackground(share)
+        setButtonBackground(share)
         share.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
@@ -210,10 +209,9 @@ class Video : AppCompatActivity() {
         }.start()
     }
 
-    private fun setBackground(btn: View) {
+    private fun setButtonBackground(button: View) {
         val typedValue = TypedValue()
-        val bg = android.R.attr.selectableItemBackgroundBorderless
-        theme.resolveAttribute(bg, typedValue, true)
-        btn.setBackgroundResource(typedValue.resourceId)
+        theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)
+        button.setBackgroundResource(typedValue.resourceId)
     }
 }

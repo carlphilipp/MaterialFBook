@@ -14,12 +14,12 @@ import me.zeeroooo.materialfb.ui.Theme
 class More : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        Theme.Temas(this, mPreferences)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        Theme.Temas(this, preferences)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_more)
-        val mToolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(mToolbar)
+        val toolBar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolBar)
     }
 
     override fun onBackPressed() {

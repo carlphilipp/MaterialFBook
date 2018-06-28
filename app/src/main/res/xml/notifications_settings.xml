@@ -22,7 +22,7 @@
             android:key="facebook_notifications"
             android:title="@string/facebook_notifications"
             android:defaultValue="false"/>
-        <RingtonePreference
+        <Preference
             android:key="ringtone"
             android:dependency="facebook_notifications"
             android:ringtoneType="notification"
@@ -57,7 +57,7 @@
             android:key="facebook_messages"
             android:title="@string/facebook_message"
             android:defaultValue="false"/>
-        <RingtonePreference
+        <Preference
             android:key="ringtone_msg"
             android:dependency="facebook_messages"
             android:ringtoneType="notification"
