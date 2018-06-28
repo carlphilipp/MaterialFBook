@@ -81,11 +81,11 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), Preference.OnP
                 val blackListView = view.findViewById<ListView>(R.id.BlackListView)
                 blackListView.adapter = adapter
 
-                blacklistDialog.setPositiveButton(android.R.string.ok) { dialog, id ->
+                blacklistDialog.setPositiveButton(android.R.string.ok) { _, _ ->
                     val word = blword.text.toString()
                     if (word != "") {
                         val blackListH = BlackListH(word)
-                        databaseHelper.addData(null, null, blackListH!!.word)
+                        databaseHelper.addData(null, null, blackListH.word)
                         blackList.add(blackListH)
                         adapter.notifyDataSetChanged()
                     }
@@ -102,7 +102,7 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), Preference.OnP
         super.onResume()
 
         // update notification ringtone preference summary
-        var ringtoneString = preferences!!.getString("ringtone", "content://settings/system/notification_sound")
+        var ringtoneString = preferences.getString("ringtone", "content://settings/system/notification_sound")
         var ringtoneUri = Uri.parse(ringtoneString)
         var name: String
 
@@ -121,7 +121,7 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), Preference.OnP
         rpn.summary = getString(R.string.notification_sound_description) + name
 
         // update message ringtone preference summary
-        ringtoneString = preferences!!.getString("ringtone_msg", "content://settings/system/notification_sound")
+        ringtoneString = preferences.getString("ringtone_msg", "content://settings/system/notification_sound")
         ringtoneUri = Uri.parse(ringtoneString)
 
         name = try {

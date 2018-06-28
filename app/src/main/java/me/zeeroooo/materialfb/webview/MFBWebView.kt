@@ -150,8 +150,4 @@ class MFBWebView : WebView, NestedScrollingChild {
         }
         return rs
     }
-
-    interface OnScrollChangedCallback {
-        fun onScrollChange(v: WebView, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int)
-    }
 }

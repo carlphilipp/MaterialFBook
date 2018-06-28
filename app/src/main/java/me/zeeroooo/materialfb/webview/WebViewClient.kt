@@ -166,7 +166,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
         }
 
         if (url.contains("lookaside") || url.contains("cdn.fbsbx.com")) {
-            activity.setUrl(url)
+            activity.url = url
             requestStoragePermission()
         }
 

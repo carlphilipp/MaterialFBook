@@ -20,9 +20,9 @@ class WebChromeClient(private val activity: MainActivity) : android.webkit.WebCh
 
         // Double check that we don't have any existing callbacks
         if (activity.sharedFromGallery != null)
-            filePathCallback.onReceiveValue(arrayOf(activity.sharedFromGallery))
+            filePathCallback.onReceiveValue(arrayOf(activity.sharedFromGallery!!))
 
-        activity.setFilePathCallback(filePathCallback)
+        activity.filePathCallback = filePathCallback
 
         // Set up the take picture intent
         var takePictureIntent: Intent? = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
