@@ -361,11 +361,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun setupFabListener() {
         val fabOnClickListener = FabOnClickListener(this)
-        findViewById<View>(R.id.textFAB).setOnClickListener(fabOnClickListener)
-        findViewById<View>(R.id.photoFAB).setOnClickListener(fabOnClickListener)
-        findViewById<View>(R.id.checkinFAB).setOnClickListener(fabOnClickListener)
-        findViewById<View>(R.id.topFAB).setOnClickListener(fabOnClickListener)
-        findViewById<View>(R.id.shareFAB).setOnClickListener(fabOnClickListener)
+        findViewById<View>(R.id.textFab).setOnClickListener(fabOnClickListener)
+        findViewById<View>(R.id.photoFab).setOnClickListener(fabOnClickListener)
+        findViewById<View>(R.id.checkinFab).setOnClickListener(fabOnClickListener)
+        findViewById<View>(R.id.topFab).setOnClickListener(fabOnClickListener)
+        findViewById<View>(R.id.shareFab).setOnClickListener(fabOnClickListener)
     }
 
     private fun loadWebViewUrl() {

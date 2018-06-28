@@ -21,7 +21,7 @@
         fab:menu_icon="@drawable/ic_fab_menu">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/checkinFAB"
+            android:id="@+id/checkinFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_fab_checkin"
@@ -32,7 +32,7 @@
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/photoFAB"
+            android:id="@+id/photoFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_fab_photo"
@@ -43,7 +43,7 @@
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/textFAB"
+            android:id="@+id/textFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_fab_text"
@@ -54,18 +54,7 @@
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/topFAB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_fab_jump_top"
-            fab:fab_colorNormal="?attr/colorPrimary"
-            fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_colorRipple="?attr/colorPrimary"
-            fab:fab_label="@string/fab_jump_top"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/shareFAB"
+            android:id="@+id/shareFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_share"
@@ -73,6 +62,17 @@
             fab:fab_colorPressed="?attr/colorPrimaryDark"
             fab:fab_colorRipple="?attr/colorPrimary"
             fab:fab_label="@string/context_share_link"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/topFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_fab_jump_top"
+            fab:fab_colorNormal="?attr/colorPrimary"
+            fab:fab_colorPressed="?attr/colorPrimaryDark"
+            fab:fab_colorRipple="?attr/colorPrimary"
+            fab:fab_label="@string/fab_jump_top"
             fab:fab_size="mini" />
 
     </com.github.clans.fab.FloatingActionMenu>
