@@ -25,8 +25,7 @@ object Constant {
     object Preference {
         const val APPLY = "apply"
         const val JOB_URL = "Job_url"
-        const val NOTIF_INTERVAL = "notif_interval" //
         const val VIDEO_URL = "video_url"
-        const val SAVE_DATA = "save_data"
+        //const val SAVE_DATA = "save_data"
     }
 }

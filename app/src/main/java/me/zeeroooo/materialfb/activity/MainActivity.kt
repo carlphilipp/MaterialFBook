@@ -39,7 +39,6 @@ import me.zeeroooo.materialfb.listener.FabOnClickListener
 import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
 import me.zeeroooo.materialfb.misc.Constant.Preference.APPLY
 import me.zeeroooo.materialfb.misc.Constant.Preference.JOB_URL
-import me.zeeroooo.materialfb.misc.Constant.Preference.SAVE_DATA
 import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
 import me.zeeroooo.materialfb.misc.Constant.Url.DESKTOP_URL
 import me.zeeroooo.materialfb.misc.Constant.Url.MBASIC_FULL_URL
@@ -93,6 +92,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         private set
     private var badgeUpdateHandler: Handler? = null
     private var badgeTask: Runnable? = null
+    private val saveData by lazy { applicationContext.getString(R.string.pref_save_data) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         webView.onResume()
         webView.resumeTimers()
 
-        if (Helpers.cookie != null && !preferences.getBoolean(SAVE_DATA, false)) {
+        if (Helpers.cookie != null && !preferences.getBoolean(saveData, false)) {
             badgeUpdateHandler = Handler()
             badgeTask = Runnable {
                 JavaScriptHelpers.updateNumsService(webView)
@@ -267,7 +267,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_mainmenu -> {
                 webView.visibility = View.INVISIBLE
 
-                if (!preferences.getBoolean(SAVE_DATA, false))
+                if (!preferences.getBoolean(saveData, false))
                     webView.loadUrl("javascript:(function()%7Btry%7Bdocument.querySelector('%23bookmarks_jewel%20%3E%20a').click()%7Dcatch(_)%7Bwindow.location.href%3D'" + "https%3A%2F%2Fm.facebook.com%2F" + "home.php'%7D%7D)()")
                 else
                     webView.loadUrl("$MBASIC_FULL_URL/menu/bookmarks/?ref_component=mbasic_home_header&ref_page=%2Fwap%2Fhome.php&refid=8")
@@ -397,7 +397,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setupBaseUrl() {
-        baseURL = if (!preferences.getBoolean(SAVE_DATA, false))
+        baseURL = if (!preferences.getBoolean(saveData, false))
             MOBILE_FULL_URL
         else
             MBASIC_FULL_URL

@@ -19,7 +19,6 @@ import android.widget.ListView
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.misc.BlackListH
 import me.zeeroooo.materialfb.misc.BlacklistAdapter
-import me.zeeroooo.materialfb.misc.Constant.Preference.NOTIF_INTERVAL
 import me.zeeroooo.materialfb.misc.DatabaseHelper
 import me.zeeroooo.materialfb.notification.Scheduler
 import java.util.ArrayList
@@ -32,6 +31,9 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), Preference.OnP
     private lateinit var preferences: SharedPreferences
     private lateinit var adapter: BlacklistAdapter
     private val blackList: MutableList<BlackListH> = ArrayList()
+    private val notifInterval by lazy {
+        currentContext.getString(R.string.pref_notif_interval)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -55,7 +57,7 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), Preference.OnP
 
         preferences.registerOnSharedPreferenceChangeListener { prefs, key ->
             when (key) {
-                NOTIF_INTERVAL -> reschedule(prefs)
+                notifInterval -> reschedule(prefs)
                 "notif_exact" -> reschedule(prefs)
             }
         }
@@ -143,6 +145,6 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), Preference.OnP
     private fun reschedule(preferences: SharedPreferences) {
         val mScheduler = Scheduler(activity)
         mScheduler.cancel()
-        mScheduler.schedule(preferences.getInt(NOTIF_INTERVAL, 60000), true)
+        mScheduler.schedule(preferences.getInt(notifInterval, 60000), true)
     }
 }

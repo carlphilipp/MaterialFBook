@@ -3,7 +3,7 @@
     <ListPreference
         android:title="@string/interval_pref"
         android:summary="@string/interval_pref_description_new"
-        android:key="notif_interval"
+        android:key="@string/pref_notif_interval"
         android:entries="@array/intervalPrefTitles"
         android:entryValues="@array/intervalPrefValues"
         android:defaultValue="60000" />
