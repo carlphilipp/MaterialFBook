@@ -22,7 +22,6 @@ class MFBWebView : WebView, NestedScrollingChild {
     private var nestedOffsetY: Int = 0
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
-    private var onScrollChangedCallback: OnScrollChangedCallback? = null
 
     constructor(context: Context) : super(context) {
         init()
