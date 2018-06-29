@@ -129,7 +129,6 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
     }
 
     override fun onLoadResource(view: WebView, url: String) {
-        Log.i(TAG, "URL: $url")
         JavaScriptHelpers.videoView(view)
         if (activity.swipeView.isRefreshing)
             JavaScriptHelpers.loadCSS(view, activity.css.toString())
