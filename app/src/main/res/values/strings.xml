@@ -175,13 +175,10 @@
     <string name="textScale">Text scale</string>
 
     <!-- Preferences -->
-    <string name="pref_notif_interval">notif_interval</string>
     <string name="pref_save_data">save_data</string>
-    <string name="pref_notifications_settings">notifications_settings</string>
     <string name="pref_navigation_menu_settings">navigation_menu_settings</string>
     <string name="pref_more_and_credits">more_and_credits</string>
     <string name="pref_location_enabled">location_enabled</string>
-    <string name="pref_notif">notif</string>
     <string name="pref_locale_switcher">locale_switcher</string>
     <string name="pref_start_url">start_url</string>
 </resources>

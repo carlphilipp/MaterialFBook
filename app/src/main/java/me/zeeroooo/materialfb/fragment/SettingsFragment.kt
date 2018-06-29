@@ -18,7 +18,6 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.activity.More
-import me.zeeroooo.materialfb.notification.Scheduler
 import me.zeeroooo.materialfb.ui.CookingAToast
 import java.util.Locale
 
@@ -26,33 +25,26 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     private lateinit var currentContext: Context
     private lateinit var preferences: SharedPreferences
-    private lateinit var scheduler: Scheduler
 
-    private val prefNotifInterval by lazy { getString(R.string.pref_notif_interval) }
     private val prefSaveData by lazy { getString(R.string.pref_save_data) }
-    private val prefNotifSettings by lazy { getString(R.string.pref_notifications_settings) }
     private val prefNavMenuSettings by lazy { getString(R.string.pref_navigation_menu_settings) }
     private val prefMoreAndCredits by lazy { getString(R.string.pref_more_and_credits) }
     private val prefLocationEnabled by lazy { getString(R.string.pref_location_enabled) }
-    private val prefNotif by lazy { getString(R.string.pref_notif) }
     private val prefLocaleSwitcher by lazy { getString(R.string.pref_locale_switcher) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         this.currentContext = context
-        scheduler = Scheduler(context)
     }
 
     override fun onCreatePreferences(bundle: Bundle?, s: String?) {
         addPreferencesFromResource(R.xml.settings)
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
-        findPreference(prefNotifSettings).onPreferenceClickListener = this
         findPreference(prefNavMenuSettings).onPreferenceClickListener = this
         findPreference(prefMoreAndCredits).onPreferenceClickListener = this
         findPreference(prefLocationEnabled).onPreferenceClickListener = this
         findPreference(prefSaveData).onPreferenceClickListener = this
-        findPreference(prefNotif).onPreferenceClickListener = this
         findPreference(prefLocaleSwitcher).setOnPreferenceChangeListener { _, o ->
             val locale = Locale(o.toString())
             Locale.setDefault(locale)
@@ -66,46 +58,18 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     override fun onPreferenceClick(preference: Preference): Boolean {
         when (preference.key) {
-            prefNotifSettings -> {
-                fragmentManager!!.beginTransaction().addToBackStack(null).replace(R.id.content_frame, NotificationsSettingsFragment()).commit()
-                return true
-            }
-            prefNavMenuSettings -> {
-                fragmentManager!!.beginTransaction().addToBackStack(null).replace(R.id.content_frame, NavigationMenuFragment()).commit()
-                return true
-            }
-            prefMoreAndCredits -> {
-                startActivity(Intent(activity, More::class.java))
-                return true
-            }
-            prefLocationEnabled -> {
-                ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-                return true
-            }
-            prefSaveData -> {
-                setScheduler()
-                return true
-            }
-            prefNotif -> {
-                setScheduler()
-                return true
-            }
+            prefNavMenuSettings -> requireFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.content_frame, NavigationMenuFragment()).commit()
+            prefMoreAndCredits -> startActivity(Intent(activity, More::class.java))
+            prefLocationEnabled -> ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            else -> return false
         }
-        return false
+        return true
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             1 -> if (!(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED))
                 CookingAToast.cooking(activity!!, getString(R.string.permission_denied), Color.WHITE, Color.parseColor("#ff4444"), R.drawable.ic_error, true).show()
-        }
-    }
-
-    private fun setScheduler() {
-        if (preferences.getBoolean(prefNotif, false) && !preferences.getBoolean(prefSaveData, false)) {
-            scheduler.schedule(preferences.getInt(prefNotifInterval, 60000), true)
-        } else {
-            scheduler.cancel()
         }
     }
 }
