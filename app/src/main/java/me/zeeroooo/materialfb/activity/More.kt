@@ -15,7 +15,7 @@ class More : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        Theme.Temas(this, preferences)
+        Theme.temas(this, preferences)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_more)
         val toolBar = findViewById<Toolbar>(R.id.toolbar)

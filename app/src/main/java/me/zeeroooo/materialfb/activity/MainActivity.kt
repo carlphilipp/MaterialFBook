@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        Theme.Temas(this, preferences)
+        Theme.temas(this, preferences)
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)

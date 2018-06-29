@@ -6,7 +6,6 @@
 package me.zeeroooo.materialfb.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -21,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        Theme.Temas(this, preferences)
+        Theme.temas(this, preferences)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
