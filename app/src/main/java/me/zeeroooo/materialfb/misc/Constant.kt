@@ -26,6 +26,5 @@ object Constant {
         const val APPLY = "apply"
         const val JOB_URL = "Job_url"
         const val VIDEO_URL = "video_url"
-        //const val SAVE_DATA = "save_data"
     }
 }

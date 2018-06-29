@@ -4,20 +4,19 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.webkit.GeolocationPermissions
 import android.webkit.ValueCallback
 import android.webkit.WebView
-
-import java.io.File
-import java.io.IOException
-
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.activity.MainActivity
 import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
+import java.io.File
+import java.io.IOException
 
 class WebChromeClient(private val activity: MainActivity) : android.webkit.WebChromeClient() {
 
-    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: android.webkit.WebChromeClient.FileChooserParams): Boolean {
+    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams): Boolean {
 
         // Double check that we don't have any existing callbacks
         if (activity.sharedFromGallery != null)
@@ -35,6 +34,7 @@ class WebChromeClient(private val activity: MainActivity) : android.webkit.WebCh
                 takePictureIntent.putExtra("PhotoPath", activity.cameraPhotoPath)
             } catch (ex: IOException) {
                 // Error occurred while creating the File
+                Log.e(TAG, ex.message, ex)
             }
 
             // Continue only if the File was successfully created
@@ -81,5 +81,9 @@ class WebChromeClient(private val activity: MainActivity) : android.webkit.WebCh
             title.contains("Facebook") -> activity.setTitle(R.string.menu_most_recent)
             else -> activity.title = title
         }
+    }
+
+    companion object {
+        private val TAG = WebChromeClient::class.java.simpleName
     }
 }

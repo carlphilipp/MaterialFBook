@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.support.annotation.NonNull
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -98,6 +99,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
         Theme.Temas(this, preferences)
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         webView = findViewById(R.id.webview)
@@ -290,8 +292,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_back -> if (webView.canGoBack())
                 webView.goBack()
             R.id.nav_exitapp -> finishAffinity()
-            else -> {
-            }
         }
         drawer.closeDrawers()
         return true
@@ -361,7 +361,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun setupFabListener() {
         val fabOnClickListener = FabOnClickListener(this)
-        findViewById<View>(R.id.textFab).setOnClickListener(fabOnClickListener)
+        findViewById<View>(R.id.statusFab).setOnClickListener(fabOnClickListener)
         findViewById<View>(R.id.photoFab).setOnClickListener(fabOnClickListener)
         findViewById<View>(R.id.checkinFab).setOnClickListener(fabOnClickListener)
         findViewById<View>(R.id.topFab).setOnClickListener(fabOnClickListener)
@@ -373,8 +373,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             "Most_recent" -> webView.loadUrl("$baseURL/home.php?sk=h_chr")
             "Top_stories" -> webView.loadUrl("$baseURL/home.php?sk=h_nor")
             "Messages" -> webView.loadUrl("$baseURL/messages/")
-            else -> {
-            }
         }
     }
 
@@ -403,7 +401,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             MBASIC_FULL_URL
     }
 
-    private fun urlIntent(intent: Intent) {
+    private fun urlIntent(@NonNull intent: Intent) {
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             if (URLUtil.isValidUrl(intent.getStringExtra(Intent.EXTRA_TEXT))) {
                 try {
