@@ -46,7 +46,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
             return false
         }
 
-        if (url.contains("video-ort2-1.xx.fbcdn.net") || url.contains("video.ford4-1.fna.fbcdn.net")) {
+        if (isVideoUrl(url)) {
             val video = Intent(activity, Video::class.java)
             video.putExtra(VIDEO_URL, url)
             activity.startActivity(video)
@@ -242,6 +242,10 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
 
     private fun requestStoragePermission() {
         ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+    }
+
+    private fun isVideoUrl(url: String): Boolean {
+        return url.contains(".mp4") || url.contains("video-ort2-1.xx.fbcdn.net") || url.contains("video.ford4-1.fna.fbcdn.net")
     }
 
     companion object {
