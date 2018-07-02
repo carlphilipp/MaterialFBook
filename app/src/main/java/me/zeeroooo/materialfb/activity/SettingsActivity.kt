@@ -19,10 +19,11 @@ import me.zeeroooo.materialfb.misc.Constant.Preference.APPLY
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        Theme.temas(this, preferences)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        Theme.applyTheme(this)
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         window.navigationBarColor = applicationContext.getColor(R.color.MFBPrimaryDark)

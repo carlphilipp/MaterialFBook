@@ -1,7 +1,6 @@
 package me.zeeroooo.materialfb.activity
 
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
@@ -14,9 +13,8 @@ import me.zeeroooo.materialfb.ui.Theme
 class More : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        Theme.temas(this, preferences)
         super.onCreate(savedInstanceState)
+        Theme.applyTheme(this)
         setContentView(R.layout.activity_more)
         val toolBar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolBar)
