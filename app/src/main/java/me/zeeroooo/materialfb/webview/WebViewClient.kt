@@ -12,6 +12,7 @@ import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import me.zeeroooo.materialfb.R
+import me.zeeroooo.materialfb.activity.App
 import me.zeeroooo.materialfb.activity.MainActivity
 import me.zeeroooo.materialfb.activity.Photo
 import me.zeeroooo.materialfb.activity.Video
@@ -25,6 +26,7 @@ import java.io.IOException
 
 class WebViewClient(private val activity: MainActivity) : android.webkit.WebViewClient() {
 
+    private val preferencesService = App.instance.preferenceService
     private var elements: Elements? = null
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -147,7 +149,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
     override fun onPageFinished(view: WebView, url: String) {
         activity.swipeView.isRefreshing = false
 
-        when (activity.preferences.getString("web_themes", "FacebookMobile")) {
+        when (preferencesService.getWebTheme()) {
             "FacebookMobile" -> {
             }
             "Material" -> activity.css.append(activity.getString(R.string.Material))
@@ -174,7 +176,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
         }
 
         // Enable or disable FAB
-        if (url.contains("messages") || !activity.preferences.getBoolean("fab_enable", false))
+        if (url.contains("messages") || !preferencesService.getBoolean("fab_enable"))
             activity.floatingActionMenu.visibility = View.GONE
         else
             activity.floatingActionMenu.visibility = View.VISIBLE
@@ -195,25 +197,25 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
             view.loadUrl("javascript:(function(){try{document.querySelector('button#u_0_1.btn.btnD.mfss.touchable').click()}catch(_){}})()")
         }
 
-        if (activity.preferences.getBoolean("hide_menu_bar", false))
+        if (preferencesService.getBoolean("hide_menu_bar"))
             activity.css.append("#page{top:-45px}")
         // Hide the status editor on the News Feed if setting is enabled
-        if (activity.preferences.getBoolean("hide_editor_newsfeed", true))
+        if (preferencesService.getBoolean("hide_editor_newsfeed", true))
             activity.css.append("#mbasic_inline_feed_composer{display:none}")
 
         // Hide the top story panel in news feed right before the status box
-        if (activity.preferences.getBoolean("hide_top_story", true))
+        if (preferencesService.getBoolean("hide_top_story", true))
             activity.css.append("._59e9._55wr._4g33._400s{display:none}")
 
         // Hide 'Sponsored' content (ads)
-        if (activity.preferences.getBoolean("hide_sponsored", true))
+        if (preferencesService.getBoolean("hide_sponsored", true))
             activity.css.append("article[data-ft*=ei]{display:none}")
 
         // Hide birthday content from News Feed
-        if (activity.preferences.getBoolean("hide_birthdays", true))
+        if (preferencesService.getBoolean("hide_birthdays", true))
             activity.css.append("article#u_1j_4{display:none}article._55wm._5e4e._5fjt{display:none}")
 
-        if (activity.preferences.getBoolean("comments_recently", true))
+        if (preferencesService.getBoolean("comments_recently", true))
             activity.css.append("._15ks+._4u3j{display:none}")
 
         if (activity.sharedFromGallery != null)

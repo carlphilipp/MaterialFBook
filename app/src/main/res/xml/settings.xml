@@ -60,7 +60,7 @@
             android:entries="@array/appLocalesNames"
             android:entryValues="@array/appLocales"/>
         <ListPreference
-            android:defaultValue="1"
+            android:defaultValue="@integer/scale_default"
             android:key="textScale"
             android:summary="%s"
             android:title="@string/textScale"

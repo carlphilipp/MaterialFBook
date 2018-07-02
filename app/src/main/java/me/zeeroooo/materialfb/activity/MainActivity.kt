@@ -10,7 +10,6 @@ import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
@@ -24,7 +23,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
@@ -34,9 +32,7 @@ import android.webkit.URLUtil
 import android.webkit.ValueCallback
 import android.widget.ImageView
 import android.widget.TextView
-import butterknife.BindString
 import butterknife.BindView
-import butterknife.ButterKnife
 import com.github.clans.fab.FloatingActionMenu
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.listener.FabOnClickListener
@@ -65,12 +61,13 @@ import java.net.URLEncoder
 
 class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView.OnNavigationItemSelectedListener {
 
+    private val preferencesService = App.instance.preferenceService
+
     @BindView(R.id.webview) lateinit var webView: MFBWebView
     @BindView(R.id.drawer_layout) lateinit var drawer: DrawerLayout
     @BindView(R.id.swipeLayout) lateinit var swipeView: SwipeRefreshLayout
     @BindView(R.id.menuFAB) lateinit var floatingActionMenu: FloatingActionMenu
     @BindView(R.id.nav_view) lateinit var navigationView: NavigationView
-    @BindString(R.string.pref_save_data) lateinit var saveData: String
 
     private lateinit var mostRecentTv: TextView
     private lateinit var friendsRegTv: TextView
@@ -81,8 +78,6 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     lateinit var profilePictureIv: ImageView
         private set
 
-    lateinit var preferences: SharedPreferences
-        private set
     private lateinit var downloadManager: DownloadManager
 
     lateinit var baseURL: String
@@ -98,7 +93,6 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     private var badgeTask: Runnable? = null
 
     override fun create(savedInstanceState: Bundle?) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(this)
         Theme.applyTheme(this.applicationContext)
 
         mostRecentTv = navigationView.menu.findItem(R.id.nav_most_recent).actionView as TextView
@@ -162,7 +156,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         webView.onResume()
         webView.resumeTimers()
 
-        if (Helpers.cookie != null && !preferences.getBoolean(saveData, false)) {
+        if (Helpers.cookie != null && !preferencesService.shouldSaveData()) {
             badgeUpdateHandler = Handler()
             badgeTask = Runnable {
                 JavaScriptHelpers.updateNumsService(webView)
@@ -186,10 +180,12 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         webView.clearHistory()
         webView.removeAllViews()
         webView.destroy()
-        if (badgeTask != null && badgeUpdateHandler != null)
+        if (badgeTask != null && badgeUpdateHandler != null) {
             badgeUpdateHandler!!.removeCallbacks(badgeTask)
-        if (preferences.getBoolean("clear_cache", false))
+        }
+        if (preferencesService.shouldClearCache()) {
             Utils.deleteCache(this)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -263,7 +259,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
             R.id.nav_mainmenu -> {
                 webView.visibility = View.INVISIBLE
 
-                if (!preferences.getBoolean(saveData, false))
+                if (!preferencesService.shouldSaveData())
                     webView.loadUrl("javascript:(function()%7Btry%7Bdocument.querySelector('%23bookmarks_jewel%20%3E%20a').click()%7Dcatch(_)%7Bwindow.location.href%3D'" + "https%3A%2F%2Fm.facebook.com%2F" + "home.php'%7D%7D)()")
                 else
                     webView.loadUrl("$MBASIC_FULL_URL/menu/bookmarks/?ref_component=mbasic_home_header&ref_page=%2Fwap%2Fhome.php&refid=8")
@@ -309,23 +305,23 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     private fun setupNavigationView() {
         navigationView.setNavigationItemSelectedListener(this)
         // Hide buttons if they are disabled
-        if (!preferences.getBoolean("nav_groups", false))
+        if (!preferencesService.isMenuVisible("nav_groups"))
             navigationView.menu.findItem(R.id.nav_groups).isVisible = false
-        if (!preferences.getBoolean("nav_mainmenu", false))
+        if (!preferencesService.isMenuVisible("nav_mainmenu"))
             navigationView.menu.findItem(R.id.nav_mainmenu).isVisible = false
-        if (!preferences.getBoolean("nav_most_recent", false))
+        if (!preferencesService.isMenuVisible("nav_most_recent"))
             navigationView.menu.findItem(R.id.nav_most_recent).isVisible = false
-        if (!preferences.getBoolean("nav_events", false))
+        if (!preferencesService.isMenuVisible("nav_events"))
             navigationView.menu.findItem(R.id.nav_events).isVisible = false
-        if (!preferences.getBoolean("nav_photos", false))
+        if (!preferencesService.isMenuVisible("nav_photos"))
             navigationView.menu.findItem(R.id.nav_photos).isVisible = false
-        if (!preferences.getBoolean("nav_back", false))
+        if (!preferencesService.isMenuVisible("nav_back"))
             navigationView.menu.findItem(R.id.nav_back).isVisible = false
-        if (!preferences.getBoolean("nav_exitapp", false))
+        if (!preferencesService.isMenuVisible("nav_exitapp"))
             navigationView.menu.findItem(R.id.nav_exitapp).isVisible = false
-        if (!preferences.getBoolean("nav_top_stories", false))
+        if (!preferencesService.isMenuVisible("nav_top_stories"))
             navigationView.menu.findItem(R.id.nav_top_stories).isVisible = false
-        if (!preferences.getBoolean("nav_friendreq", false))
+        if (!preferencesService.isMenuVisible("nav_friendreq"))
             navigationView.menu.findItem(R.id.nav_friendreq).isVisible = false
     }
 
@@ -339,7 +335,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     private fun setupWebView() {
         webView.setUpOnScrollChanged(floatingActionMenu, application.resources.getDimensionPixelOffset(R.dimen.fab_scroll_threshold))
 
-        webView.updateSettings(preferences)
+        webView.updateSettings()
         webView.addJavascriptInterface(JavaScriptInterfaces(this), "android")
         webView.addJavascriptInterface(this, "Vid")
 
@@ -363,7 +359,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     }
 
     private fun loadWebViewUrl() {
-        when (preferences.getString(getString(R.string.pref_start_url), "Most_recent")) {
+        when (preferencesService.getStartUrl()) {
             "Most_recent" -> webView.loadUrl("$baseURL/home.php?sk=h_chr")
             "Top_stories" -> webView.loadUrl("$baseURL/home.php?sk=h_nor")
             "Messages" -> webView.loadUrl("$baseURL/messages/")
@@ -389,7 +385,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     }
 
     private fun setupBaseUrl() {
-        baseURL = if (!preferences.getBoolean(saveData, false))
+        baseURL = if (!preferencesService.shouldSaveData())
             MOBILE_FULL_URL
         else
             MBASIC_FULL_URL

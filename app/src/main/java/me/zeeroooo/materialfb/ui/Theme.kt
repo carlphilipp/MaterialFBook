@@ -8,11 +8,9 @@ import android.content.Context
 import android.util.TypedValue
 
 import me.zeeroooo.materialfb.R
-import me.zeeroooo.materialfb.service.PreferenceService
+import me.zeeroooo.materialfb.activity.App
 
 object Theme {
-
-    private val preferenceService: PreferenceService = PreferenceService
 
     // Thanks to Naman Dwivedi
     fun getColor(context: Context): Int {
@@ -23,7 +21,7 @@ object Theme {
     }
 
     fun applyTheme(context: Context) {
-        val theme = preferenceService.getTheme(context)
+        val theme = App.instance.preferenceService.getAppTheme()
         when (theme) {
             "MaterialFBook" -> context.setTheme(R.style.MFB)
             "Amoled" -> context.setTheme(R.style.Black)

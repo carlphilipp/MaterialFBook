@@ -11,8 +11,11 @@ import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
 import com.github.clans.fab.FloatingActionMenu
+import me.zeeroooo.materialfb.activity.App
 
 class MFBWebView : WebView, NestedScrollingChild {
+
+    private val preferencesService = App.instance.preferenceService
 
     private lateinit var childHelper: NestedScrollingChildHelper
     private lateinit var floatingActionMenu: FloatingActionMenu
@@ -40,10 +43,10 @@ class MFBWebView : WebView, NestedScrollingChild {
         isNestedScrollingEnabled = true
     }
 
-    fun updateSettings(preferences: SharedPreferences) {
-        settings.setGeolocationEnabled(preferences.getBoolean("location_enabled", false))
-        settings.minimumFontSize = preferences.getString("textScale", "1").toInt()
-        settings.blockNetworkImage = preferences.getBoolean("stop_images", false)
+    fun updateSettings() {
+        settings.setGeolocationEnabled(preferencesService.getBoolean("location_enabled"))
+        settings.minimumFontSize = preferencesService.getTextScale()
+        settings.blockNetworkImage = preferencesService.getBoolean("stop_images")
         settings.setAppCacheEnabled(true)
         settings.useWideViewPort = true
         settings.javaScriptEnabled = true

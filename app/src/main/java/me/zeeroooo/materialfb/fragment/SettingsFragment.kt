@@ -6,25 +6,22 @@ package me.zeeroooo.materialfb.fragment
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.os.LocaleList
-import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.activity.More
 import me.zeeroooo.materialfb.ui.CookingAToast
-import java.util.Locale
+import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
     private lateinit var currentContext: Context
-    private lateinit var preferences: SharedPreferences
 
     private val prefSaveData by lazy { getString(R.string.pref_save_data) }
     private val prefNavMenuSettings by lazy { getString(R.string.pref_navigation_menu_settings) }
@@ -39,7 +36,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     override fun onCreatePreferences(bundle: Bundle?, s: String?) {
         addPreferencesFromResource(R.xml.settings)
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
         findPreference(prefNavMenuSettings).onPreferenceClickListener = this
         findPreference(prefMoreAndCredits).onPreferenceClickListener = this
