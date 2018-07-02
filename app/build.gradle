@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -45,14 +46,19 @@ android {
 
 dependencies {
     implementation(
-            [group: 'com.android.support', name: 'appcompat-v7', version: supportLibraryVersionn],
-            [group: 'com.android.support', name: 'preference-v7', version: supportLibraryVersionn],
-            [group: 'com.android.support', name: 'design', version: supportLibraryVersionn],
-            [group: 'com.android.support', name: 'support-v4', version: supportLibraryVersionn],
+            [group: 'com.android.support', name: 'appcompat-v7', version: support_library_versionn],
+            [group: 'com.android.support', name: 'preference-v7', version: support_library_versionn],
+            [group: 'com.android.support', name: 'design', version: support_library_versionn],
+            [group: 'com.android.support', name: 'support-v4', version: support_library_versionn],
+            [group: 'com.jakewharton', name: 'butterknife', version: butterknife_version],
             [group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version],
             [group: 'com.github.chrisbanes', name: 'PhotoView', version: '2.1.3'],
             [group: 'org.jsoup', name: 'jsoup', version: '1.11.3'],
             [group: 'com.github.bumptech.glide', name: 'glide', version: '4.7.1'],
+    )
+
+    kapt(
+            [group: 'com.jakewharton', name: 'butterknife-compiler', version: butterknife_version],
     )
 }
 repositories {

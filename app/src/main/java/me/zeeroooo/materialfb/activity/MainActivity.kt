@@ -34,6 +34,8 @@ import android.webkit.URLUtil
 import android.webkit.ValueCallback
 import android.widget.ImageView
 import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.github.clans.fab.FloatingActionMenu
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.listener.FabOnClickListener
@@ -50,12 +52,7 @@ import me.zeeroooo.materialfb.misc.UserInfoAsyncTask
 import me.zeeroooo.materialfb.misc.Utils
 import me.zeeroooo.materialfb.ui.CookingAToast
 import me.zeeroooo.materialfb.ui.Theme
-import me.zeeroooo.materialfb.webview.Helpers
-import me.zeeroooo.materialfb.webview.JavaScriptHelpers
-import me.zeeroooo.materialfb.webview.JavaScriptInterfaces
-import me.zeeroooo.materialfb.webview.MFBWebView
-import me.zeeroooo.materialfb.webview.WebChromeClient
-import me.zeeroooo.materialfb.webview.WebViewClient
+import me.zeeroooo.materialfb.webview.*
 import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
@@ -63,15 +60,17 @@ import java.net.URLEncoder
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var preferences: SharedPreferences
-        private set
+
+    @BindView(R.id.webview)
     lateinit var webView: MFBWebView
-        private set
-    private lateinit var drawer: DrawerLayout
+    @BindView(R.id.drawer_layout)
+    lateinit var drawer: DrawerLayout
+    @BindView(R.id.swipeLayout)
     lateinit var swipeView: SwipeRefreshLayout
-        private set
+    @BindView(R.id.menuFAB)
     lateinit var floatingActionMenu: FloatingActionMenu
-        private set
-    private lateinit var navigationView: NavigationView
+    @BindView(R.id.nav_view)
+    lateinit var navigationView: NavigationView
     private lateinit var mostRecentTv: TextView
     private lateinit var friendsRegTv: TextView
     lateinit var profileNameTv: TextView
@@ -101,12 +100,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+        ButterKnife.bind(this)
 
-        webView = findViewById(R.id.webview)
-        drawer = findViewById(R.id.drawer_layout)
-        swipeView = findViewById(R.id.swipeLayout)
-        floatingActionMenu = findViewById(R.id.menuFAB)
-        navigationView = findViewById(R.id.nav_view)
         mostRecentTv = navigationView.menu.findItem(R.id.nav_most_recent).actionView as TextView
         friendsRegTv = navigationView.menu.findItem(R.id.nav_friendreq).actionView as TextView
 

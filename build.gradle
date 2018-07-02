@@ -20,7 +20,8 @@ allprojects {
 }
 
 ext {
-    supportLibraryVersionn = '28.0.0-alpha3'
+    support_library_versionn = '28.0.0-alpha3'
+    butterknife_version = '8.8.1'
 }
 
 task clean(type: Delete) {

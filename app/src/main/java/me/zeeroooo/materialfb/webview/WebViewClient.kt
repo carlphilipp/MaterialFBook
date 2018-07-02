@@ -24,6 +24,7 @@ import org.jsoup.select.Elements
 import java.io.IOException
 
 class WebViewClient(private val activity: MainActivity) : android.webkit.WebViewClient() {
+
     private var elements: Elements? = null
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
