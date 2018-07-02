@@ -16,7 +16,6 @@ import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -29,6 +28,7 @@ import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import butterknife.BindView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -45,13 +45,14 @@ import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
 import me.zeeroooo.materialfb.ui.CookingAToast
 import java.io.File
 
-class Photo : AppCompatActivity(), OnPhotoTapListener {
+class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
 
-    private lateinit var imageView: PhotoView
-    private lateinit var topGradient: View
-    private lateinit var toolbar: Toolbar
-    private lateinit var imageTitle: TextView
-    private lateinit var progressBar: ProgressBar
+    @BindView(R.id.photo) lateinit var imageView: PhotoView
+    @BindView(R.id.photoViewerTopGradient) lateinit var topGradient: View
+    @BindView(R.id.toolbar_ph) lateinit var toolbar: Toolbar
+    @BindView(R.id.photo_title) lateinit var imageTitle: TextView
+    @BindView(android.R.id.progress) lateinit var progressBar: ProgressBar
+
     private lateinit var downloadManager: DownloadManager
     private lateinit var webView: WebView
 
@@ -61,16 +62,7 @@ class Photo : AppCompatActivity(), OnPhotoTapListener {
     private var share = 0
     private var imageUrl: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_photo)
-
-        imageView = findViewById(R.id.photo)
-        topGradient = findViewById(R.id.photoViewerTopGradient)
-        toolbar = findViewById(R.id.toolbar_ph)
-        imageTitle = findViewById(R.id.photo_title)
-        progressBar = findViewById(android.R.id.progress)
+    override fun create(savedInstanceState: Bundle?) {
         downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         webView = WebView(this)
 

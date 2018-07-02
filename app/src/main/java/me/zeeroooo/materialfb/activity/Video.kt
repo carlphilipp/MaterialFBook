@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
@@ -21,38 +20,31 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import butterknife.BindView
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
 import me.zeeroooo.materialfb.ui.CookingAToast
 import me.zeeroooo.materialfb.webview.VideoViewTouchable
 import java.io.File
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.TimeUnit
 
-class Video : AppCompatActivity() {
+class Video : ButterKnifeActivity(R.layout.activity_video) {
 
-    private lateinit var videoView: VideoViewTouchable
-    private lateinit var buttonsHeader: RelativeLayout
-    private lateinit var seekBar: SeekBar
+    @BindView(R.id.video_view) lateinit var videoView: VideoViewTouchable
+    @BindView(R.id.buttons_header) lateinit var buttonsHeader: RelativeLayout
+    @BindView(R.id.progress) lateinit var seekBar: SeekBar
+    @BindView(R.id.elapsed_time) lateinit var elapsedTime: TextView
+    @BindView(R.id.remaining_time) lateinit var remainingTime: TextView
+
     private lateinit var downloadManager: DownloadManager
-    private lateinit var elapsedTime: TextView
-    private lateinit var remainingTime: TextView
     private lateinit var url: String
-
     private var position = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video)
-
+    override fun create(savedInstanceState: Bundle?) {
         url = intent.getStringExtra(VIDEO_URL)
 
-        videoView = findViewById(R.id.video_view)
-        buttonsHeader = findViewById(R.id.buttons_header)
-        seekBar = findViewById(R.id.progress)
         downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        elapsedTime = findViewById(R.id.elapsed_time)
-        remainingTime = findViewById(R.id.remaining_time)
 
         seekBar.progressDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
         seekBar.thumb.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
