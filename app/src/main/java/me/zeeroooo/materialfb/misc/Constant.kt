@@ -3,6 +3,8 @@ package me.zeeroooo.materialfb.misc
 object Constant {
     const val INPUT_FILE_REQUEST_CODE = 1
     const val REQUEST_AUTHORIZED_CODE = 1
+    const val COUNT_DOWN_FUTURE = 5000L
+    const val COUNT_DOWN_INTERVAL = 1000L
 
     object Url {
         private const val PROTOCOL = "https"

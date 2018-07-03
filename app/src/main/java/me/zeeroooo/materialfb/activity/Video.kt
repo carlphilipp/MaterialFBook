@@ -22,11 +22,13 @@ import android.widget.SeekBar
 import android.widget.TextView
 import butterknife.BindView
 import me.zeeroooo.materialfb.R
+import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_FUTURE
+import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_INTERVAL
 import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
 import me.zeeroooo.materialfb.ui.CookingAToast
 import me.zeeroooo.materialfb.webview.VideoViewTouchable
 import java.io.File
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class Video : ButterKnifeActivity(R.layout.activity_video) {
@@ -63,7 +65,7 @@ class Video : ButterKnifeActivity(R.layout.activity_video) {
             }
         }
         videoView.setOnTouchListener { _, _ ->
-            setCountDown()
+            startCountDownToHideButtons()
             setButtonsHeaderVisibility(View.VISIBLE, android.R.anim.fade_in)
             false
         }
@@ -177,13 +179,13 @@ class Video : ButterKnifeActivity(R.layout.activity_video) {
             seekBar.progress = videoView.currentPosition
             if (videoView.isPlaying) {
                 seekBar.postDelayed(this, 1000)
-                elapsedTime.text = time(videoView.currentPosition.toLong())
-                remainingTime.text = time((videoView.duration - videoView.currentPosition).toLong())
+                elapsedTime.text = formatTime(videoView.currentPosition.toLong())
+                remainingTime.text = formatTime((videoView.duration - videoView.currentPosition).toLong())
             }
         }
     }
 
-    private fun time(ms: Long): String {
+    private fun formatTime(ms: Long): String {
         return String.format(Locale.getDefault(), "%d:%d", TimeUnit.MILLISECONDS.toMinutes(ms), TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms)))
     }
 
@@ -191,8 +193,8 @@ class Video : ButterKnifeActivity(R.layout.activity_video) {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
     }
 
-    private fun setCountDown() {
-        object : CountDownTimer(5000, 1000) {
+    private fun startCountDownToHideButtons() {
+        object : CountDownTimer(COUNT_DOWN_FUTURE, COUNT_DOWN_INTERVAL) {
 
             override fun onTick(millisUntilFinished: Long) {}
 

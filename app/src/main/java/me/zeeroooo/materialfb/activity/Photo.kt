@@ -41,6 +41,8 @@ import com.bumptech.glide.request.transition.Transition
 import com.github.chrisbanes.photoview.OnPhotoTapListener
 import com.github.chrisbanes.photoview.PhotoView
 import me.zeeroooo.materialfb.R
+import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_FUTURE
+import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_INTERVAL
 import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
 import me.zeeroooo.materialfb.misc.Constant.REQUEST_AUTHORIZED_CODE
 import me.zeeroooo.materialfb.ui.CookingAToast
@@ -254,7 +256,5 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
     companion object {
         private const val SHARE_IMAGE = 1
         private const val SHARE_FLAG_DONE = 2
-        private const val COUNT_DOWN_FUTURE = 5000L
-        private const val COUNT_DOWN_INTERVAL = 1000L
     }
 }
