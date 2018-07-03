@@ -71,16 +71,17 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     private lateinit var profilePictureIv: ImageView
     private lateinit var downloadManager: DownloadManager
     private lateinit var baseUrl: String
+    private lateinit var badgeUpdateHandler: Handler
 
     var cameraPhotoPath: String? = null
-    val css = StringBuilder()
+    val css: String = ""
     var url: String? = null
-    private var urlIntent: String? = null
     var filePathCallback: ValueCallback<Array<Uri>>? = null
     var sharedFromGallery: Uri? = null
         private set
-    private var badgeUpdateHandler: Handler? = null
+
     private var badgeTask: Runnable? = null
+    private var urlIntent: String? = null
 
     override fun create(savedInstanceState: Bundle?) {
         Theme.applyTheme(this.applicationContext)
@@ -90,6 +91,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         profilePictureIv = navigationView.getHeaderView(0).findViewById(R.id.profile_picture)
 
         downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        badgeUpdateHandler = Handler()
 
         setupColor()
         setupBaseUrl()
@@ -144,10 +146,9 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         webView.resumeTimers()
 
         if (Helpers.cookie != null && !preferencesService.shouldSaveData()) {
-            badgeUpdateHandler = Handler()
             badgeTask = Runnable {
                 JavaScriptHelpers.updateNumsService(webView)
-                badgeUpdateHandler!!.postDelayed(badgeTask, 15000)
+                badgeUpdateHandler.postDelayed(badgeTask, 15000)
             }
             badgeTask!!.run()
             UserInfoAsyncTask(this, profileNameTv, coverIv, profilePictureIv).execute()
@@ -157,8 +158,9 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     override fun onPause() {
         super.onPause()
         webView.onPause()
-        if (badgeTask != null && badgeUpdateHandler != null)
-            badgeUpdateHandler!!.removeCallbacks(badgeTask)
+        if (badgeTask != null) {
+            badgeUpdateHandler.removeCallbacks(badgeTask)
+        }
     }
 
     override fun onDestroy() {
@@ -167,8 +169,8 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         webView.clearHistory()
         webView.removeAllViews()
         webView.destroy()
-        if (badgeTask != null && badgeUpdateHandler != null) {
-            badgeUpdateHandler!!.removeCallbacks(badgeTask)
+        if (badgeTask != null) {
+            badgeUpdateHandler.removeCallbacks(badgeTask)
         }
         if (preferencesService.shouldClearCache()) {
             Utils.deleteCache(this)
@@ -240,7 +242,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
                 webView.visibility = View.INVISIBLE
 
                 webView.loadUrl("$baseUrl/groups/?category=membership")
-                css.append("._129- {position:initial}")
+                css.plus("._129- {position:initial}")
                 item.isChecked = true
             }
             R.id.nav_mainmenu -> {
@@ -257,7 +259,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
                 webView.visibility = View.INVISIBLE
 
                 webView.loadUrl("$baseUrl/events/")
-                css.append("#page{top:0}")
+                css.plus("#page{top:0}")
                 item.isChecked = true
             }
             R.id.nav_photos -> {
@@ -284,23 +286,23 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     private fun setupNavigationView() {
         navigationView.setNavigationItemSelectedListener(this)
         // Hide buttons if they are disabled
-        if (!preferencesService.isMenuVisible("nav_groups"))
+        if (!preferencesService.isMenuVisible("nav_groups", true))
             navigationView.menu.findItem(R.id.nav_groups).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_mainmenu"))
+        if (!preferencesService.isMenuVisible("nav_mainmenu", false))
             navigationView.menu.findItem(R.id.nav_mainmenu).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_most_recent"))
+        if (!preferencesService.isMenuVisible("nav_most_recent", true))
             navigationView.menu.findItem(R.id.nav_most_recent).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_events"))
+        if (!preferencesService.isMenuVisible("nav_events", false))
             navigationView.menu.findItem(R.id.nav_events).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_photos"))
+        if (!preferencesService.isMenuVisible("nav_photos", false))
             navigationView.menu.findItem(R.id.nav_photos).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_back"))
+        if (!preferencesService.isMenuVisible("nav_back", false))
             navigationView.menu.findItem(R.id.nav_back).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_exitapp"))
+        if (!preferencesService.isMenuVisible("nav_exitapp", false))
             navigationView.menu.findItem(R.id.nav_exitapp).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_top_stories"))
+        if (!preferencesService.isMenuVisible("nav_top_stories", false))
             navigationView.menu.findItem(R.id.nav_top_stories).isVisible = false
-        if (!preferencesService.isMenuVisible("nav_friendreq"))
+        if (!preferencesService.isMenuVisible("nav_friendreq", false))
             navigationView.menu.findItem(R.id.nav_friendreq).isVisible = false
     }
 
@@ -377,31 +379,30 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         }
 
         if (intent.extras != null)
-            urlIntent = intent.extras!!.getString(JOB_URL)
+            urlIntent = intent.extras.getString(JOB_URL)
 
         if (intent.dataString != null) {
             urlIntent = getIntent().dataString
-            if (intent.dataString!!.contains("profile"))
-                urlIntent = urlIntent!!.replace("fb://profile/", "https://facebook.com/")
+            if (intent.dataString.contains("profile"))
+                urlIntent = urlIntent?.replace("fb://profile/", "https://facebook.com/")
         }
 
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             if (intent.type!!.startsWith("image/") || intent.type!!.startsWith("video/") || intent.type!!.startsWith("audio/")) {
                 sharedFromGallery = intent.getParcelableExtra(Intent.EXTRA_STREAM)
-                css.append("#mbasic_inline_feed_composer{display:initial}")
+                css.plus("#mbasic_inline_feed_composer{display:initial}")
                 webView.loadUrl(MOBILE_FULL_URL)
             }
         }
 
         val newUrl = urlIntent
-        val moreNewUrl: String
         if (newUrl != null && newUrl.contains(DESKTOP_URL)) {
-            moreNewUrl = newUrl.replace(DESKTOP_URL, MOBILE_URL)
+            val moreNewUrl = newUrl.replace(DESKTOP_URL, MOBILE_URL)
             webView.loadUrl(moreNewUrl)
         } else if (newUrl != null && newUrl.contains(WEB_URL)) {
-            moreNewUrl = newUrl.replace(WEB_URL, MOBILE_URL)
+            val moreNewUrl = newUrl.replace(WEB_URL, MOBILE_URL)
             webView.loadUrl(moreNewUrl)
-        } else {
+        } else if (urlIntent != null) {
             webView.loadUrl(urlIntent)
         }
     }

@@ -35,8 +35,8 @@ class PreferenceServices(private val context: Context) {
         return getPreferences().getString("web_themes", "FacebookMobile")
     }
 
-    fun isMenuVisible(menuName: String): Boolean {
-        return getPreferences().getBoolean(menuName, false)
+    fun isMenuVisible(menuName: String, default: Boolean): Boolean {
+        return getPreferences().getBoolean(menuName, default)
     }
 
     fun shouldClearCache(): Boolean {

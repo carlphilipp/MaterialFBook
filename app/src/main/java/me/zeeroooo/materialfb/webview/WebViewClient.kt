@@ -137,7 +137,7 @@ class WebViewClient(private val activity: MainActivity, private val baseUrl: Str
         if (activity.swipeView.isRefreshing)
             JavaScriptHelpers.loadCSS(view, activity.css.toString())
         if (url.contains("$DOMAIN/composer/mbasic/") || url.contains("$MOBILE_FULL_URL/sharer.php?sid="))
-            activity.css.append("#page{top:0}")
+            activity.css.plus("#page{top:0}")
 
         // Do not start Photo activity anymore when clicking on a photo in news feed
         //if (url.contains("/photos/viewer/"))
@@ -153,22 +153,22 @@ class WebViewClient(private val activity: MainActivity, private val baseUrl: Str
         when (preferencesService.getWebTheme()) {
             "FacebookMobile" -> {
             }
-            "Material" -> activity.css.append(activity.getString(R.string.Material))
+            "Material" -> activity.css.plus(activity.getString(R.string.Material))
             "MaterialAmoled" -> {
-                activity.css.append(activity.getString(R.string.MaterialAmoled))
-                activity.css.append("::selection {background: #D3D3D3;}")
+                activity.css.plus(activity.getString(R.string.MaterialAmoled))
+                activity.css.plus("::selection {background: #D3D3D3;}")
             }
-            "MaterialBlack" -> activity.css.append(activity.getString(R.string.MaterialBlack))
-            "MaterialPink" -> activity.css.append(activity.getString(R.string.MaterialPink))
-            "MaterialGrey" -> activity.css.append(activity.getString(R.string.MaterialGrey))
-            "MaterialGreen" -> activity.css.append(activity.getString(R.string.MaterialGreen))
-            "MaterialRed" -> activity.css.append(activity.getString(R.string.MaterialRed))
-            "MaterialLime" -> activity.css.append(activity.getString(R.string.MaterialLime))
-            "MaterialYellow" -> activity.css.append(activity.getString(R.string.MaterialYellow))
-            "MaterialPurple" -> activity.css.append(activity.getString(R.string.MaterialPurple))
-            "MaterialLightBlue" -> activity.css.append(activity.getString(R.string.MaterialLightBlue))
-            "MaterialOrange" -> activity.css.append(activity.getString(R.string.MaterialOrange))
-            "MaterialGooglePlayGreen" -> activity.css.append(activity.getString(R.string.MaterialGPG))
+            "MaterialBlack" -> activity.css.plus(activity.getString(R.string.MaterialBlack))
+            "MaterialPink" -> activity.css.plus(activity.getString(R.string.MaterialPink))
+            "MaterialGrey" -> activity.css.plus(activity.getString(R.string.MaterialGrey))
+            "MaterialGreen" -> activity.css.plus(activity.getString(R.string.MaterialGreen))
+            "MaterialRed" -> activity.css.plus(activity.getString(R.string.MaterialRed))
+            "MaterialLime" -> activity.css.plus(activity.getString(R.string.MaterialLime))
+            "MaterialYellow" -> activity.css.plus(activity.getString(R.string.MaterialYellow))
+            "MaterialPurple" -> activity.css.plus(activity.getString(R.string.MaterialPurple))
+            "MaterialLightBlue" -> activity.css.plus(activity.getString(R.string.MaterialLightBlue))
+            "MaterialOrange" -> activity.css.plus(activity.getString(R.string.MaterialOrange))
+            "MaterialGooglePlayGreen" -> activity.css.plus(activity.getString(R.string.MaterialGPG))
         }
 
         if (url.contains("lookaside") || url.contains("cdn.fbsbx.com")) {
@@ -177,10 +177,11 @@ class WebViewClient(private val activity: MainActivity, private val baseUrl: Str
         }
 
         // Enable or disable FAB
-        if (url.contains("messages") || !preferencesService.getBoolean("fab_enable"))
-            activity.floatingActionMenu.visibility = View.GONE
-        else
-            activity.floatingActionMenu.visibility = View.VISIBLE
+        activity.floatingActionMenu.visibility =
+                if (url.contains("messages") || !preferencesService.getBoolean("fab_enable"))
+                    View.GONE
+                else
+                    View.VISIBLE
 
         if (url.contains("$MBASIC_FULL_URL/composer/?text=")) {
             val sanitizer = UrlQuerySanitizer()
@@ -199,30 +200,30 @@ class WebViewClient(private val activity: MainActivity, private val baseUrl: Str
         }
 
         if (preferencesService.getBoolean("hide_menu_bar"))
-            activity.css.append("#page{top:-45px}")
+            activity.css.plus("#page{top:-45px}")
         // Hide the status editor on the News Feed if setting is enabled
         if (preferencesService.getBoolean("hide_editor_newsfeed", true))
-            activity.css.append("#mbasic_inline_feed_composer{display:none}")
+            activity.css.plus("#mbasic_inline_feed_composer{display:none}")
 
         // Hide the top story panel in news feed right before the status box
         if (preferencesService.getBoolean("hide_top_story", true))
-            activity.css.append("._59e9._55wr._4g33._400s{display:none}")
+            activity.css.plus("._59e9._55wr._4g33._400s{display:none}")
 
         // Hide 'Sponsored' content (ads)
         if (preferencesService.getBoolean("hide_sponsored", true))
-            activity.css.append("article[data-ft*=ei]{display:none}")
+            activity.css.plus("article[data-ft*=ei]{display:none}")
 
         // Hide birthday content from News Feed
         if (preferencesService.getBoolean("hide_birthdays", true))
-            activity.css.append("article#u_1j_4{display:none}article._55wm._5e4e._5fjt{display:none}")
+            activity.css.plus("article#u_1j_4{display:none}article._55wm._5e4e._5fjt{display:none}")
 
         if (preferencesService.getBoolean("comments_recently", true))
-            activity.css.append("._15ks+._4u3j{display:none}")
+            activity.css.plus("._15ks+._4u3j{display:none}")
 
         if (activity.sharedFromGallery != null)
             view.loadUrl("javascript:(function(){try{document.getElementsByClassName(\"_56bz _54k8 _52jh _5j35 _157e\")[0].click()}catch(_){document.getElementsByClassName(\"_50ux\")[0].click()}})()")
 
-        activity.css.append("article#u_0_q._d2r{display:none}*{-webkit-tap-highlight-color:transparent;outline:0}")
+        activity.css.plus("article#u_0_q._d2r{display:none}*{-webkit-tap-highlight-color:transparent;outline:0}")
         activity.webView.visibility = View.VISIBLE
     }
 
@@ -232,8 +233,8 @@ class WebViewClient(private val activity: MainActivity, private val baseUrl: Str
                 try {
                     val document = Jsoup.connect(url).get()
                     elements = document.select(select).select(select2)
-                } catch (ioex: IOException) {
-                    Log.e(TAG, ioex.message, ioex)
+                } catch (e: IOException) {
+                    Log.e(TAG, e.message, e)
                 }
                 return null
             }
