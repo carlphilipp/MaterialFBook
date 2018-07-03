@@ -63,7 +63,6 @@ class WebChromeClient(private val activity: MainActivity) : android.webkit.WebCh
         return true
     }
 
-    @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
         val imageFileName = "JPEG_" + System.currentTimeMillis().toString() + "_"

@@ -222,6 +222,7 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
             view.loadUrl("javascript:(function(){try{document.getElementsByClassName(\"_56bz _54k8 _52jh _5j35 _157e\")[0].click()}catch(_){document.getElementsByClassName(\"_50ux\")[0].click()}})()")
 
         activity.css.append("article#u_0_q._d2r{display:none}*{-webkit-tap-highlight-color:transparent;outline:0}")
+        activity.webView.visibility = View.VISIBLE
     }
 
     private fun getSrc(url: String, select: String, select2: String) {
