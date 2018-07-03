@@ -15,7 +15,7 @@ class PreferenceServices(private val context: Context) {
     }
 
     fun getTextScale(): Int {
-        return getPreferences().getInt("textScale", 1)
+        return getPreferences().getString("textScale", "1").toInt()
     }
 
     fun getBoolean(str: String): Boolean {

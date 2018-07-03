@@ -63,7 +63,7 @@
             android:defaultValue="@integer/scale_default"
             android:key="textScale"
             android:summary="%s"
-            android:title="@string/textScale"
+            android:title="@string/text_scale"
             android:entries="@array/scalesText"
             android:entryValues="@array/scales"/>
     </PreferenceCategory>
