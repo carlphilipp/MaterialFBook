@@ -24,7 +24,7 @@ import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.IOException
 
-class WebViewClient(private val activity: MainActivity) : android.webkit.WebViewClient() {
+class WebViewClient(private val activity: MainActivity, private val baseUrl: String) : android.webkit.WebViewClient() {
 
     private val preferencesService = App.instance.preferenceService
     private var elements: Elements? = null
@@ -127,8 +127,9 @@ class WebViewClient(private val activity: MainActivity) : android.webkit.WebView
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         activity.swipeView.isRefreshing = true
-        if (url.contains("$MBASIC_FULL_URL/home.php?s="))
-            view.loadUrl(activity.baseURL)
+        if (url.contains("$MBASIC_FULL_URL/home.php?s=")) {
+            view.loadUrl(baseUrl)
+        }
     }
 
     override fun onLoadResource(view: WebView, url: String) {

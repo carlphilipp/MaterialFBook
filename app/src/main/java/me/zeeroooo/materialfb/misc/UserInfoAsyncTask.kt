@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.util.Log
 import android.webkit.CookieManager
+import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -17,9 +19,15 @@ import java.io.InputStream
 import java.lang.ref.WeakReference
 import java.net.URL
 
-class UserInfoAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, Boolean>() {
+class UserInfoAsyncTask(activity: MainActivity,
+                        profileNameTv: TextView,
+                        coverIv: ImageView,
+                        profilePictureIv: ImageView) : AsyncTask<Void, Void, Boolean>() {
 
     private val weakActivity = WeakReference(activity)
+    private val weakProfileName = WeakReference(profileNameTv)
+    private val weakCover = WeakReference(coverIv)
+    private val weakProfilePicture = WeakReference(profilePictureIv)
     private var name: String? = null
     private var coverBitmap: Bitmap? = null
     private var profileBitmap: Bitmap? = null
@@ -48,17 +56,20 @@ class UserInfoAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, Boolean>
 
     override fun onPostExecute(shouldProcess: Boolean) {
         val activity = weakActivity.get()
-        if (shouldProcess && activity != null) {
+        val profileNameTv = weakProfileName.get()
+        val coverIv = weakCover.get()
+        val profilePictureIv = weakProfilePicture.get()
+        if (shouldProcess && activity != null && profileNameTv != null && coverIv != null && profilePictureIv != null) {
             try {
-                activity.profileNameTv.text = name
+                profileNameTv.text = name
                 Glide.with(activity)
                         .load(coverBitmap)
                         .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                        .into(activity.coverIv)
+                        .into(coverIv)
                 Glide.with(activity)
                         .load(profileBitmap)
                         .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop())
-                        .into(activity.profilePictureIv)
+                        .into(profilePictureIv)
             } catch (e: Exception) {
                 Log.e(TAG, e.message, e)
             }

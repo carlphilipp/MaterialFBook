@@ -7,7 +7,7 @@ import me.zeeroooo.materialfb.R
 
 class PreferenceServices(private val context: Context) {
 
-    private val saveData by lazy { context.getString(R.string.pref_save_data) }
+    private val prefSaveData by lazy { context.getString(R.string.pref_save_data) }
     private val prefStartUrl by lazy { context.getString(R.string.pref_start_url) }
     private val prefTextScale by lazy { context.getString(R.string.pref_text_scale) }
 
@@ -44,7 +44,7 @@ class PreferenceServices(private val context: Context) {
     }
 
     fun shouldSaveData(): Boolean {
-        return getPreferences().getBoolean(saveData, false)
+        return getPreferences().getBoolean(prefSaveData, false)
     }
 
     private fun getPreferences(): SharedPreferences {

@@ -12,19 +12,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
-import android.preference.PreferenceManager
 import android.support.annotation.NonNull
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
-import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.webkit.JavascriptInterface
@@ -69,19 +66,12 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     @BindView(R.id.menuFAB) lateinit var floatingActionMenu: FloatingActionMenu
     @BindView(R.id.nav_view) lateinit var navigationView: NavigationView
 
-    private lateinit var mostRecentTv: TextView
-    private lateinit var friendsRegTv: TextView
-    lateinit var profileNameTv: TextView
-        private set
-    lateinit var coverIv: ImageView
-        private set
-    lateinit var profilePictureIv: ImageView
-        private set
-
+    private lateinit var profileNameTv: TextView
+    private lateinit var coverIv: ImageView
+    private lateinit var profilePictureIv: ImageView
     private lateinit var downloadManager: DownloadManager
+    private lateinit var baseUrl: String
 
-    lateinit var baseURL: String
-        private set
     var cameraPhotoPath: String? = null
     val css = StringBuilder()
     var url: String? = null
@@ -94,9 +84,6 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
 
     override fun create(savedInstanceState: Bundle?) {
         Theme.applyTheme(this.applicationContext)
-
-        mostRecentTv = navigationView.menu.findItem(R.id.nav_most_recent).actionView as TextView
-        friendsRegTv = navigationView.menu.findItem(R.id.nav_friendreq).actionView as TextView
 
         profileNameTv = navigationView.getHeaderView(0).findViewById(R.id.profile_name)
         coverIv = navigationView.getHeaderView(0).findViewById(R.id.cover)
@@ -163,7 +150,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
                 badgeUpdateHandler!!.postDelayed(badgeTask, 15000)
             }
             badgeTask!!.run()
-            UserInfoAsyncTask(this).execute()
+            UserInfoAsyncTask(this, profileNameTv, coverIv, profilePictureIv).execute()
         }
     }
 
@@ -230,14 +217,14 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
             R.id.nav_top_stories -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl("$baseURL/home.php?sk=h_nor")
+                webView.loadUrl("$baseUrl/home.php?sk=h_nor")
                 setTitle(R.string.menu_top_stories)
                 item.isChecked = true
             }
             R.id.nav_most_recent -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl("$baseURL/home.php?sk=h_chr'")
+                webView.loadUrl("$baseUrl/home.php?sk=h_chr'")
                 setTitle(R.string.menu_most_recent)
                 item.isChecked = true
                 Helpers.uncheckRadioMenu(navigationView.menu)
@@ -245,14 +232,14 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
             R.id.nav_friendreq -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl("$baseURL/friends/center/requests/")
+                webView.loadUrl("$baseUrl/friends/center/requests/")
                 setTitle(R.string.menu_friendreq)
                 item.isChecked = true
             }
             R.id.nav_groups -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl("$baseURL/groups/?category=membership")
+                webView.loadUrl("$baseUrl/groups/?category=membership")
                 css.append("._129- {position:initial}")
                 item.isChecked = true
             }
@@ -269,14 +256,14 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
             R.id.nav_events -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl("$baseURL/events/")
+                webView.loadUrl("$baseUrl/events/")
                 css.append("#page{top:0}")
                 item.isChecked = true
             }
             R.id.nav_photos -> {
                 webView.visibility = View.INVISIBLE
 
-                webView.loadUrl("$baseURL/photos/")
+                webView.loadUrl("$baseUrl/photos/")
             }
             R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
             R.id.nav_back -> if (webView.canGoBack())
@@ -292,14 +279,6 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         val video = Intent(this, Video::class.java)
         video.putExtra(VIDEO_URL, video_url)
         startActivity(video)
-    }
-
-    fun setRequestsNum(num: Int) {
-        txtFormat(friendsRegTv, num, Color.RED)
-    }
-
-    fun setMrNum(num: Int) {
-        txtFormat(mostRecentTv, num, Color.RED)
     }
 
     private fun setupNavigationView() {
@@ -333,13 +312,16 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     }
 
     private fun setupWebView() {
+        val mostRecentTv = navigationView.menu.findItem(R.id.nav_most_recent).actionView as TextView
+        val friendsRegTv = navigationView.menu.findItem(R.id.nav_friendreq).actionView as TextView
+
         webView.setUpOnScrollChanged(floatingActionMenu, application.resources.getDimensionPixelOffset(R.dimen.fab_scroll_threshold))
 
         webView.updateSettings()
-        webView.addJavascriptInterface(JavaScriptInterfaces(this), "android")
+        webView.addJavascriptInterface(JavaScriptInterfaces(this, mostRecentTv, friendsRegTv), "android")
         webView.addJavascriptInterface(this, "Vid")
 
-        webView.webViewClient = WebViewClient(this)
+        webView.webViewClient = WebViewClient(this, baseUrl)
         webView.webChromeClient = WebChromeClient(this)
     }
 
@@ -350,7 +332,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     }
 
     private fun setupFabListener() {
-        val fabOnClickListener = FabOnClickListener(this)
+        val fabOnClickListener = FabOnClickListener(this, baseUrl)
         findViewById<View>(R.id.statusFab).setOnClickListener(fabOnClickListener)
         findViewById<View>(R.id.photoFab).setOnClickListener(fabOnClickListener)
         findViewById<View>(R.id.checkinFab).setOnClickListener(fabOnClickListener)
@@ -360,9 +342,9 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
 
     private fun loadWebViewUrl() {
         when (preferencesService.getStartUrl()) {
-            "Most_recent" -> webView.loadUrl("$baseURL/home.php?sk=h_chr")
-            "Top_stories" -> webView.loadUrl("$baseURL/home.php?sk=h_nor")
-            "Messages" -> webView.loadUrl("$baseURL/messages/")
+            "Most_recent" -> webView.loadUrl("$baseUrl/home.php?sk=h_chr")
+            "Top_stories" -> webView.loadUrl("$baseUrl/home.php?sk=h_nor")
+            "Messages" -> webView.loadUrl("$baseUrl/messages/")
         }
     }
 
@@ -372,20 +354,12 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         profileImage.isClickable = true
         profileImage.setOnClickListener { _ ->
             drawer.closeDrawers()
-            webView.loadUrl("$baseURL/me")
+            webView.loadUrl("$baseUrl/me")
         }
     }
 
-    private fun txtFormat(t: TextView, i: Int, color: Int) {
-        t.text = String.format("%s", i)
-        t.setTextColor(color)
-        t.gravity = Gravity.CENTER_VERTICAL
-        t.setTypeface(null, Typeface.BOLD)
-        t.visibility = if (i > 0) View.VISIBLE else View.INVISIBLE
-    }
-
     private fun setupBaseUrl() {
-        baseURL = if (!preferencesService.shouldSaveData())
+        baseUrl = if (!preferencesService.shouldSaveData())
             MOBILE_FULL_URL
         else
             MBASIC_FULL_URL

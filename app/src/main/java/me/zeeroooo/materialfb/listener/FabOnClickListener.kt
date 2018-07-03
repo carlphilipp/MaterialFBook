@@ -6,10 +6,9 @@ import android.view.View
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.activity.MainActivity
 
-class FabOnClickListener(private val activity: MainActivity) : View.OnClickListener {
+class FabOnClickListener(private val activity: MainActivity, private val baseUrl: String) : View.OnClickListener {
 
     override fun onClick(view: View) {
-        val baseUrl = activity.baseURL
         when (view.id) {
             R.id.checkinFab -> {
                 activity.webView.loadUrl(clickOn("u_0_11", baseUrl))
