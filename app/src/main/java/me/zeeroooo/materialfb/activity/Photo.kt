@@ -42,6 +42,7 @@ import com.github.chrisbanes.photoview.OnPhotoTapListener
 import com.github.chrisbanes.photoview.PhotoView
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
+import me.zeeroooo.materialfb.misc.Constant.REQUEST_AUTHORIZED_CODE
 import me.zeeroooo.materialfb.ui.CookingAToast
 import java.io.File
 
@@ -58,8 +59,7 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
 
     private var shareTarget: Target<Bitmap>? = null
     private var download = false
-    private var countdown = false
-    private var share = 0
+    private var shareFlag = 0
     private var imageUrl: String? = null
 
     override fun create(savedInstanceState: Bundle?) {
@@ -70,10 +70,8 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
         imageTitle.text = intent.getStringExtra("title")
 
         setSupportActionBar(toolbar)
-        if (supportActionBar != null) {
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            supportActionBar!!.setDisplayShowTitleEnabled(false)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         webView.settings.blockNetworkImage = true
         webView.settings.setAppCacheEnabled(false)
@@ -104,26 +102,8 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
     }
 
     override fun onPhotoTap(view: ImageView, x: Float, y: Float) {
-        setVisibility(View.VISIBLE, android.R.anim.fade_in)
-        setCountDown()
-    }
-
-    private fun load() {
-        Glide.with(this)
-                .load(imageUrl)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
-                        return false
-                    }
-
-                    override fun onResourceReady(resource: Drawable, model: Any, target: Target<Drawable>, dataSource: DataSource, isFirstResource: Boolean): Boolean {
-                        progressBar.visibility = View.GONE
-                        setCountDown()
-                        return false
-                    }
-                })
-                .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
-                .into(imageView)
+        updateButtonsVisibilityWithAnimation(View.VISIBLE, android.R.anim.fade_in)
+        startCountDownToHideButtons()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -139,7 +119,7 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
                 requestStoragePermission()
             }
             R.id.share_image -> {
-                share = 1
+                shareFlag = SHARE_IMAGE
                 requestStoragePermission()
             }
             R.id.copy_url_image -> {
@@ -153,32 +133,13 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
         return false
     }
 
-    private fun shareImage() {
-        shareTarget = object : SimpleTarget<Bitmap>() {
-            override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
-                val path = MediaStore.Images.Media.insertImage(contentResolver, bitmap, Uri.parse(imageUrl).lastPathSegment, null)
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.type = "image/*"
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path))
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.context_share_image)))
-                CookingAToast.cooking(this@Photo, getString(R.string.context_share_image_progress), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_share, false).show()
-            }
-        }
-        Glide.with(this@Photo).asBitmap().load(imageUrl).apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(shareTarget!!)
-        share = 2
-    }
-
-    private fun requestStoragePermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            INPUT_FILE_REQUEST_CODE -> {
+            REQUEST_AUTHORIZED_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (share == 1)
+                    if (shareFlag == SHARE_IMAGE) {
                         shareImage()
-                    else if (download) {
+                    } else if (download) {
                         // Save the image
                         val request = DownloadManager.Request(Uri.parse(imageUrl))
 
@@ -210,9 +171,9 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
         finish()
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
-        if (share != 2) {
+        if (shareFlag != SHARE_FLAG_DONE) {
             if (shareTarget != null)
                 Glide.with(this@Photo).clear(shareTarget)
             imageView.setImageDrawable(null)
@@ -223,26 +184,52 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
         webView.destroy()
     }
 
-    fun setVisibility(visibility: Int, animation: Int) {
-        val a = AnimationUtils.loadAnimation(this, animation)
+    private fun load() {
+        Glide.with(this)
+                .load(imageUrl)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
 
-        topGradient.startAnimation(a)
-        toolbar.startAnimation(a)
-        imageTitle.startAnimation(a)
-
-        topGradient.visibility = visibility
-        toolbar.visibility = visibility
-        imageTitle.visibility = visibility
+                    override fun onResourceReady(resource: Drawable, model: Any, target: Target<Drawable>, dataSource: DataSource, isFirstResource: Boolean): Boolean {
+                        progressBar.visibility = View.GONE
+                        startCountDownToHideButtons()
+                        return false
+                    }
+                })
+                .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                .into(imageView)
     }
 
-    private fun setCountDown() {
-        val countDownTimer = object : CountDownTimer(5000, 1000) {
+    private fun shareImage() {
+        shareTarget = object : SimpleTarget<Bitmap>() {
+            override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+                val path = MediaStore.Images.Media.insertImage(contentResolver, bitmap, Uri.parse(imageUrl).lastPathSegment, null)
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "image/*"
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path))
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.context_share_image)))
+                CookingAToast.cooking(this@Photo, getString(R.string.context_share_image_progress), Color.WHITE, Color.parseColor("#00C851"), R.drawable.ic_share, false).show()
+            }
+        }
+        Glide.with(this@Photo).asBitmap().load(imageUrl).apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(shareTarget!!)
+        shareFlag = SHARE_FLAG_DONE
+    }
+
+    private fun requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+    }
+
+    private fun startCountDownToHideButtons() {
+        var countdown = false
+        val countDownTimer = object : CountDownTimer(COUNT_DOWN_FUTURE, COUNT_DOWN_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
                 countdown = true
             }
 
             override fun onFinish() {
-                setVisibility(View.INVISIBLE, android.R.anim.fade_out)
+                updateButtonsVisibilityWithAnimation(View.INVISIBLE, android.R.anim.fade_out)
                 countdown = false
             }
         }
@@ -250,5 +237,24 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
             countDownTimer.start()
         else
             countDownTimer.cancel()
+    }
+
+    private fun updateButtonsVisibilityWithAnimation(visibility: Int, a: Int) {
+        val animation = AnimationUtils.loadAnimation(this, a)
+
+        topGradient.startAnimation(animation)
+        toolbar.startAnimation(animation)
+        imageTitle.startAnimation(animation)
+
+        topGradient.visibility = visibility
+        toolbar.visibility = visibility
+        imageTitle.visibility = visibility
+    }
+
+    companion object {
+        private const val SHARE_IMAGE = 1
+        private const val SHARE_FLAG_DONE = 2
+        private const val COUNT_DOWN_FUTURE = 5000L
+        private const val COUNT_DOWN_INTERVAL = 1000L
     }
 }

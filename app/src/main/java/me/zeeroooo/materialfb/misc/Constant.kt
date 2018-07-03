@@ -2,6 +2,7 @@ package me.zeeroooo.materialfb.misc
 
 object Constant {
     const val INPUT_FILE_REQUEST_CODE = 1
+    const val REQUEST_AUTHORIZED_CODE = 1
 
     object Url {
         private const val PROTOCOL = "https"
