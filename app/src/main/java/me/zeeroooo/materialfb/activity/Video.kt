@@ -25,6 +25,7 @@ import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_FUTURE
 import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_INTERVAL
 import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
+import me.zeeroooo.materialfb.misc.Constant.REQUEST_AUTHORIZE_CODE
 import me.zeeroooo.materialfb.ui.CookingAToast
 import me.zeeroooo.materialfb.webview.VideoViewTouchable
 import java.io.File
@@ -190,7 +191,7 @@ class Video : ButterKnifeActivity(R.layout.activity_video) {
     }
 
     private fun requestStoragePermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_AUTHORIZE_CODE)
     }
 
     private fun startCountDownToHideButtons() {

@@ -17,6 +17,7 @@ import me.zeeroooo.materialfb.activity.MainActivity
 import me.zeeroooo.materialfb.activity.Photo
 import me.zeeroooo.materialfb.activity.Video
 import me.zeeroooo.materialfb.misc.Constant.Preference.VIDEO_URL
+import me.zeeroooo.materialfb.misc.Constant.REQUEST_AUTHORIZE_CODE
 import me.zeeroooo.materialfb.misc.Constant.Url.DOMAIN
 import me.zeeroooo.materialfb.misc.Constant.Url.MBASIC_FULL_URL
 import me.zeeroooo.materialfb.misc.Constant.Url.MOBILE_FULL_URL
@@ -247,7 +248,7 @@ class WebViewClient(private val activity: MainActivity, private val baseUrl: Str
     }
 
     private fun requestStoragePermission() {
-        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_AUTHORIZE_CODE)
     }
 
     private fun isVideoUrl(url: String): Boolean {

@@ -43,8 +43,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import me.zeeroooo.materialfb.R
 import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_FUTURE
 import me.zeeroooo.materialfb.misc.Constant.COUNT_DOWN_INTERVAL
-import me.zeeroooo.materialfb.misc.Constant.INPUT_FILE_REQUEST_CODE
-import me.zeeroooo.materialfb.misc.Constant.REQUEST_AUTHORIZED_CODE
+import me.zeeroooo.materialfb.misc.Constant.REQUEST_AUTHORIZE_CODE
 import me.zeeroooo.materialfb.ui.CookingAToast
 import java.io.File
 
@@ -137,7 +136,7 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            REQUEST_AUTHORIZED_CODE -> {
+            REQUEST_AUTHORIZE_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (shareFlag == SHARE_IMAGE) {
                         shareImage()
@@ -220,7 +219,7 @@ class Photo : ButterKnifeActivity(R.layout.activity_photo), OnPhotoTapListener {
     }
 
     private fun requestStoragePermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_AUTHORIZE_CODE)
     }
 
     private fun startCountDownToHideButtons() {
