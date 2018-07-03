@@ -78,10 +78,10 @@
         <item>vi</item>
     </string-array>
 
-    <integer-array name="scales">
+    <string-array name="scales">
         <item>1</item>
         <item>20</item>
         <item>40</item>
         <item>60</item>
-    </integer-array>
+    </string-array>
 </resources>

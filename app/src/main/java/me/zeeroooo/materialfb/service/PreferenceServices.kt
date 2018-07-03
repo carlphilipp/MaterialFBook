@@ -9,13 +9,14 @@ class PreferenceServices(private val context: Context) {
 
     private val saveData by lazy { context.getString(R.string.pref_save_data) }
     private val prefStartUrl by lazy { context.getString(R.string.pref_start_url) }
+    private val prefTextScale by lazy { context.getString(R.string.pref_text_scale) }
 
     fun getStartUrl(): String {
         return getPreferences().getString(prefStartUrl, "Most_recent")
     }
 
     fun getTextScale(): Int {
-        return getPreferences().getString("textScale", "1").toInt()
+        return getPreferences().getString(prefTextScale, "1").toInt()
     }
 
     fun getBoolean(str: String): Boolean {
