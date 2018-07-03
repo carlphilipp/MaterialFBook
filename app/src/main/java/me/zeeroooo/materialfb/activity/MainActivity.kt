@@ -74,7 +74,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
     private lateinit var badgeUpdateHandler: Handler
 
     var cameraPhotoPath: String? = null
-    val css: String = ""
+    var css = StringBuilder()
     var url: String? = null
     var filePathCallback: ValueCallback<Array<Uri>>? = null
     var sharedFromGallery: Uri? = null
@@ -242,7 +242,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
                 webView.visibility = View.INVISIBLE
 
                 webView.loadUrl("$baseUrl/groups/?category=membership")
-                css.plus("._129- {position:initial}")
+                css.append("._129- {position:initial}")
                 item.isChecked = true
             }
             R.id.nav_mainmenu -> {
@@ -259,7 +259,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
                 webView.visibility = View.INVISIBLE
 
                 webView.loadUrl("$baseUrl/events/")
-                css.plus("#page{top:0}")
+                css.append("#page{top:0}")
                 item.isChecked = true
             }
             R.id.nav_photos -> {
@@ -390,7 +390,7 @@ class MainActivity : ButterKnifeActivity(R.layout.activity_main), NavigationView
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             if (intent.type!!.startsWith("image/") || intent.type!!.startsWith("video/") || intent.type!!.startsWith("audio/")) {
                 sharedFromGallery = intent.getParcelableExtra(Intent.EXTRA_STREAM)
-                css.plus("#mbasic_inline_feed_composer{display:initial}")
+                css.append("#mbasic_inline_feed_composer{display:initial}")
                 webView.loadUrl(MOBILE_FULL_URL)
             }
         }
